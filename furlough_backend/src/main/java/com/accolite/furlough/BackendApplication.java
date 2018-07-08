@@ -1,4 +1,4 @@
-package com.accolite.furlough.furloughtracker;
+package com.accolite.furlough;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
