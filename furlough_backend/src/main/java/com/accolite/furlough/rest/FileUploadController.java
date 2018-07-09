@@ -1,15 +1,9 @@
 package com.accolite.furlough.rest;
-/* 
- * @author = guru shankar
- * accepts cross origin from localhost:4200
- * @RequestParam should be similar as that of input tag
- * Validations done
- * 	1. Check for file type extensions
- *  2. Upload only .xls
- * Upload is done by file storage service
- * 
- * 
- * reviewed by Vignesh.B
+/*
+ * @author = guru shankar accepts cross origin from localhost:4200
+ * @RequestParam should be similar as that of input tag Validations done 1.
+ * Check for file type extensions 2. Upload only .xls Upload is done by file
+ * storage service reviewed by Vignesh.B
  */
 
 import java.io.File;
@@ -35,61 +29,57 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 
 import com.accolite.furlough.service.FileStorageService;
 
-
-
-
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @Controller
 public class FileUploadController {
 
-	@Autowired
-	FileStorageService filestorageService;
+    @Autowired
+    FileStorageService filestorageService;
 
-	List<String> files = new ArrayList<String>();
+    List<String> files = new ArrayList<String>();
 
-	@PostMapping("/post")
-	public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
-		String message = "";
-		try {
-			
-		filestorageService.store(file);
-		files.add(file.getOriginalFilename());
-		String fullName=file.getOriginalFilename();
-		String fileName = new File(fullName).getName();
-	    int dotIndex = fileName.lastIndexOf('.');
-	    String extension= (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
-		if(extension.equals("xls"))	{
-			message = "You successfully uploaded " + file.getOriginalFilename() + "!";
-			return ResponseEntity.status(HttpStatus.OK).body(message);
-			}
-		else	{
-			message = "wrong file type " + file.getOriginalFilename() + "!";
-			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
-			}
-		} 
-		
-		catch (Exception e) {
-			message = "FAIL to upload " + file.getOriginalFilename() + "!";
-			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
-		}
-	}
+    @PostMapping("/post")
+    public ResponseEntity<String> handleFileUpload(@RequestParam("file") final MultipartFile file) {
+        String message = "";
+        try {
 
-	@GetMapping("/getallfiles")
-	public ResponseEntity<List<String>> getListFiles(Model model) {
-		List<String> fileNames = files
-				.stream().map(fileName -> MvcUriComponentsBuilder
-						.fromMethodName(FileUploadController.class, "getFile", fileName).build().toString())
-				.collect(Collectors.toList());
+            files.add(file.getOriginalFilename());
+            final String fullName = file.getOriginalFilename();
+            final String fileName = new File(fullName).getName();
+            final int dotIndex = fileName.lastIndexOf('.');
+            final String extension = (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
+            if (extension.equals("xls")) {
+                filestorageService.store(file);
+                message = "You successfully uploaded " + file.getOriginalFilename() + "!";
+                return ResponseEntity.status(HttpStatus.OK).body(message);
+            } else {
+                message = "wrong file type " + file.getOriginalFilename() + "!";
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+            }
+        }
 
-		return ResponseEntity.ok().body(fileNames);
-	}
+        catch (final Exception e) {
+            message = "FAIL to upload " + file.getOriginalFilename() + "!";
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+        }
+    }
 
-	@GetMapping("/files/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-		Resource file = filestorageService.loadFile(filename);
-		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-				.body(file);
-	}
+    @GetMapping("/getallfiles")
+    public ResponseEntity<List<String>> getListFiles(final Model model) {
+        final List<String> fileNames = files
+                .stream().map(fileName -> MvcUriComponentsBuilder
+                        .fromMethodName(FileUploadController.class, "getFile", fileName).build().toString())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(fileNames);
+    }
+
+    @GetMapping("/files/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> getFile(@PathVariable final String filename) {
+        final Resource file = filestorageService.loadFile(filename);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .body(file);
+    }
 }

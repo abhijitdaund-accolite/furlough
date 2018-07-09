@@ -29,8 +29,8 @@ public class FileStorageService {
             final ParseInput parser = new ParseInput();
             final String finalString = rootLocation.toString() + "\\" + file.getOriginalFilename();
             System.out.println(finalString);
+            // parser.mapExcelToHashmp(finalString);
             parser.mapExcelToHashmp(finalString);
-            parser.printMapDetails(parser.mapExcelToHashmp(finalString));
         } catch (final Exception e) {
             throw new RuntimeException("FAIL!");
         }
