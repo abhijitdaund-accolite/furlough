@@ -35,9 +35,6 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 
 import com.accolite.furlough.service.FileStorageService;
 
-
-
-
 @CrossOrigin(origins="http://localhost:4200")
 @Controller
 public class FileUploadController {
@@ -45,20 +42,19 @@ public class FileUploadController {
 	@Autowired
 	FileStorageService filestorageService;
 
-	List<String> files = new ArrayList<String>();
+	String fileName=new String();
 
 	@PostMapping("/post")
 	public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
 		String message = "";
-		try {
-			
-		filestorageService.store(file);
-		files.add(file.getOriginalFilename());
-		String fullName=file.getOriginalFilename();
-		String fileName = new File(fullName).getName();
-	    int dotIndex = fileName.lastIndexOf('.');
+		try  {
+		//Check for .xls file or not
+		fileName=file.getOriginalFilename();
+		int dotIndex = fileName.lastIndexOf('.');
 	    String extension= (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
 		if(extension.equals("xls"))	{
+			//Upload only .xls files
+			filestorageService.store(file);
 			message = "You successfully uploaded " + file.getOriginalFilename() + "!";
 			return ResponseEntity.status(HttpStatus.OK).body(message);
 			}
@@ -72,24 +68,5 @@ public class FileUploadController {
 			message = "FAIL to upload " + file.getOriginalFilename() + "!";
 			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
 		}
-	}
-
-	@GetMapping("/getallfiles")
-	public ResponseEntity<List<String>> getListFiles(Model model) {
-		List<String> fileNames = files
-				.stream().map(fileName -> MvcUriComponentsBuilder
-						.fromMethodName(FileUploadController.class, "getFile", fileName).build().toString())
-				.collect(Collectors.toList());
-
-		return ResponseEntity.ok().body(fileNames);
-	}
-
-	@GetMapping("/files/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-		Resource file = filestorageService.loadFile(filename);
-		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-				.body(file);
 	}
 }

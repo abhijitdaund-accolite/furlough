@@ -17,7 +17,7 @@ public class BackendApplication implements CommandLineRunner{
         SpringApplication.run(BackendApplication.class, args);
     }
     @Override
-	public void run(String... arg) throws Exception {
+	public void run(String[] arg) throws Exception {
 		filestorageService.deleteAll();
 		filestorageService.init();
 	}
