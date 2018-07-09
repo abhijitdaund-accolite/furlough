@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: Avinash.Kumar
+Build-Jdk: 10.0.1
+Implementation-Title: backend
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.accolite.furlough
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/furlough-tracker
+Created-By: Maven Integration for Eclipse
+
