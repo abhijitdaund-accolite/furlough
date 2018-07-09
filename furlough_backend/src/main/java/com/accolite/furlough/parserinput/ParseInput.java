@@ -19,7 +19,7 @@ import com.accolite.furlough.entity.FurloughData;
 
 public class ParseInput {
 	
-	final private static String filePath = "C:\\Users\\Raunak.Maheshwari\\file2.xls";
+	final private static String filePath = "C:\\Users\\Raunak.Maheshwari\\file.xls";
 	final private static String dateFormat = "MM/dd/yyyy";
 	Map<String,FurloughData> map = new HashMap<String, FurloughData>();
 	
