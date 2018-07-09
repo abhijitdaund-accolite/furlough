@@ -7,48 +7,54 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class FurloughRequestsIDTracker implements Serializable{
+public class FurloughRequestsIDTracker
+        implements
+        Serializable {
 
-	@Column(name="MS_ID")
-	private String msId;
-	
-	@Column(name="FURLOUGH_DATE")
-	private Date furloughDate;
-	
-	public FurloughRequestsIDTracker(String msId,Date furloughDate) {
-		this.furloughDate=furloughDate;
-		this.msId=msId;
-	}
+    @Column(name = "MSID")
+    private String MSID;
 
-	public String getMsId() {
-		return msId;
-	}
+    @Column(name = "furloughDate")
+    private Date furloughDate;
 
-	public void setMsId(String msId) {
-		this.msId = msId;
-	}
+    public FurloughRequestsIDTracker(final String MSID, final Date furloughDate) {
+        this.furloughDate = furloughDate;
+        this.MSID = MSID;
+    }
 
-	public Date getFurloughDate() {
-		return furloughDate;
-	}
+    public String getMSID() {
+        return MSID;
+    }
 
-	public void setFurloughDate(Date furloughDate) {
-		this.furloughDate = furloughDate;
-	}
-	
-	
-	@Override
-	public boolean equals(Object arg0) {
-		if(arg0 == null) {return (Boolean) null;}
-		if(!(arg0 instanceof FurloughRequestsIDTracker)) {return false;}
-		FurloughRequestsIDTracker arg1=(FurloughRequestsIDTracker) arg0;
-		
-		return this.getMsId()==arg1.getMsId() && this.getFurloughDate()==arg1.getFurloughDate();
-	}
-	
-	/*@Override
-	public int hashCode() {
-		//TODO code to calculate HashCode PRIORITY HIGH
-	}*/
-	
+    public void setMsId(final String MSID) {
+        this.MSID = MSID;
+    }
+
+    public Date getFurloughDate() {
+        return furloughDate;
+    }
+
+    public void setFurloughDate(final Date furloughDate) {
+        this.furloughDate = furloughDate;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof FurloughRequestsIDTracker)) {
+            return false;
+        }
+        final FurloughRequestsIDTracker furloughRequestID = (FurloughRequestsIDTracker) obj;
+
+        return this.getMSID() == furloughRequestID.getMSID()
+                && this.getFurloughDate() == furloughRequestID.getFurloughDate();
+    }
+
+    /*
+     * @Override public int hashCode() { //TODO code to calculate HashCode PRIORITY
+     * HIGH }
+     */
+
 }
