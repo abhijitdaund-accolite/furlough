@@ -16,6 +16,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 
 import com.accolite.furlough.entity.FurloughData;
+import com.accolite.furlough.service.DBUpdater;
 import com.accolite.furlough.utils.Constants;
 
 public class ParseInput {
@@ -25,7 +26,7 @@ public class ParseInput {
     final private static String dateFormat = "MM/dd/yyyy";
     Map<String, FurloughData> map = new HashMap<String, FurloughData>();
 
-    public Map<String, FurloughData> mapExcelToHashmp(final String location) {
+    public void mapExcelToHashmp(final String location) {
 
         try {
             final File inputExcel = new File(Constants.ROOT_PATH + location);
@@ -76,7 +77,8 @@ public class ParseInput {
 
             }
             myWorkBook.close();
-            return map;
+            // return map;
+            DBUpdater.updateDB(map);
 
         } catch (final IOException e) {
             System.out.println("Error in reading file from system with error message " + e.getMessage());
@@ -85,7 +87,7 @@ public class ParseInput {
             System.out.println("Error in parsing date with error message " + e.getMessage());
             e.printStackTrace();
         }
-        return null;
+        // return null;
     }
 
     public void printMapDetails(final Map<String, FurloughData> map) {
