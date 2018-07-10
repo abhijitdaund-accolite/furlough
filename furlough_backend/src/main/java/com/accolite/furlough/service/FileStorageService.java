@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -15,22 +16,25 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.accolite.furlough.parserinput.ParseInput;
+import com.accolite.furlough.repository.FurloughRequestsRepository;
 import com.accolite.furlough.utils.Constants;
 
 @Service
 public class FileStorageService {
+
+    @Autowired
+    FurloughRequestsRepository furloughRequestsRepository;
 
     Logger log = LoggerFactory.getLogger(this.getClass().getName());
     private final Path rootLocation = Paths.get(Constants.UPLOAD_DIR);
 
     public void store(final MultipartFile file) {
         try {
+        	System.out.println("Creating furloughRequestsRepository object in store : " + furloughRequestsRepository);
             Files.copy(file.getInputStream(), this.rootLocation.resolve(file.getOriginalFilename()));
             final ParseInput parser = new ParseInput();
             final String finalString = rootLocation.toString() + "\\" + file.getOriginalFilename();
-            System.out.println(finalString);
-            // parser.mapExcelToHashmp(finalString);
-            parser.mapExcelToHashmp(finalString);
+            parser.mapExcelToHashmap(finalString, furloughRequestsRepository);
         } catch (final Exception e) {
             throw new RuntimeException("FAIL!");
         }
