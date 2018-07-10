@@ -27,8 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import com.accolite.furlough.parserinput.ParseInput;
-import com.accolite.furlough.repository.FurloughRequestsRepository;
 import com.accolite.furlough.service.FileStorageService;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -37,7 +35,7 @@ public class FileUploadController {
 
     @Autowired
     FileStorageService filestorageService;
-    
+
     List<String> files = new ArrayList<String>();
 
     @PostMapping("/post")

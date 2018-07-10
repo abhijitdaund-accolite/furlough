@@ -1,4 +1,4 @@
-package com.accolite.furlough.parserinput;
+package com.accolite.furlough.service;
 
 import java.io.File;
 import java.io.FileInputStream;
