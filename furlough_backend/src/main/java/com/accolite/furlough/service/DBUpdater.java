@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.accolite.furlough.entity.FurloughData;
@@ -16,9 +17,12 @@ import com.accolite.furlough.utils.FurloughRequestsIDTracker;
 @Service
 public class DBUpdater {
 
+    @Autowired
+    private static FurloughRequestsRepository furloughRequestsRepository;
+
     public static FurloughRequests requestInserter(final FurloughRequests request,
             final FurloughRequestsRepository obj) {
-        System.out.println("Printing findByID : " + obj.findById(request.getFurloughID()));
+        System.out.println("Printing findByID : " + furloughRequestsRepository.findById(request.getFurloughID()));
         System.out.println("DBUpdater.requestInserter(): request: " + request);
         final Object a = obj.save(request);
         obj.flush();
