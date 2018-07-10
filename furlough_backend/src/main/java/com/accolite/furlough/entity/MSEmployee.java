@@ -13,6 +13,21 @@ import javax.persistence.Table;
 @Table(name = "MSEmployee")
 public class MSEmployee {
 
+    public MSEmployee() {
+        super();
+    }
+
+    public MSEmployee(final String mSID, final String resourceName, final String vendorName, final String division,
+            final String officeLocation, final AccoliteEmployee accoliteEmployee) {
+        super();
+        MSID = mSID;
+        this.resourceName = resourceName;
+        this.vendorName = vendorName;
+        this.division = division;
+        this.officeLocation = officeLocation;
+        this.accoliteEmployee = accoliteEmployee;
+    }
+
     @Id
     @Column(name = "MSID")
     private String MSID;

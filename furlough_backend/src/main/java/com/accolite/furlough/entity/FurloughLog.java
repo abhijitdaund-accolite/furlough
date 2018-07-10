@@ -1,25 +1,19 @@
 package com.accolite.furlough.entity;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
-import com.accolite.furlough.utils.FurloughStatus;
-
 @Entity
-@Table(name = "FurloughLog")
+@Table(name = "furloughLog")
 public class FurloughLog {
 
     @Id
@@ -28,19 +22,72 @@ public class FurloughLog {
     @Column(name = "requestID")
     private String requestID;
 
-    @ManyToOne
-    @JoinColumn(name = "MSID")
-    private MSEmployee msEmployee;
+    @JoinColumn(name = "mSID")
+    private String mSID;
 
     @Column(name = "furloughDate")
     private Date furloughDate;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "furloughStatus")
-    private FurloughStatus furloughStatus;
+    private String furloughStatus;
 
     @Column(name = "logTime")
     @CreationTimestamp
-    private LocalDateTime logTime;
+    private Date logTime;
+
+    public String getRequestID() {
+        return requestID;
+    }
+
+    public void setRequestID(final String requestID) {
+        this.requestID = requestID;
+    }
+
+    public String getmSID() {
+        return mSID;
+    }
+
+    public void setmSID(final String mSID) {
+        this.mSID = mSID;
+    }
+
+    public Date getFurloughDate() {
+        return furloughDate;
+    }
+
+    public void setFurloughDate(final Date furloughDate) {
+        this.furloughDate = furloughDate;
+    }
+
+    public String getFurloughStatus() {
+        return furloughStatus;
+    }
+
+    public void setFurloughStatus(final String furloughStatus) {
+        this.furloughStatus = furloughStatus;
+    }
+
+    public Date getLogTime() {
+        return logTime;
+    }
+
+    public void setLogTime(final Date date) {
+        this.logTime = date;
+    }
+
+    public FurloughLog() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+    public FurloughLog(final String requestID, final String mSID, final Date furloughDate, final String furloughStatus,
+            final Date logTime) {
+        super();
+        this.requestID = requestID;
+        this.mSID = mSID;
+        this.furloughDate = furloughDate;
+        this.furloughStatus = furloughStatus;
+        this.logTime = logTime;
+    }
 
 }

@@ -23,7 +23,7 @@ public class RequestIDGenerator
 
         try {
             final Statement statement = connection.createStatement();
-            final ResultSet rs = statement.executeQuery("select count(requestID) as ID from furlough.furloughLog");
+            final ResultSet rs = statement.executeQuery("select count(requestID) as ID from furlough_log");
 
             if (rs.next()) {
                 final int id = rs.getInt(1);
