@@ -47,13 +47,12 @@ public class FileStorageService {
     private FurloughLogRepository furloughLogRepository;
 
     Logger log = LoggerFactory.getLogger(this.getClass().getName());
-    private final Path rootLocation = Paths.get(Constants.UPLOAD_DIR);
+    private final Path rootLocation = Paths.get(Constants.ROOT_PATH + Constants.UPLOAD_DIR);
 
     public void store(final MultipartFile file) {
         try {
             Files.copy(file.getInputStream(), this.rootLocation.resolve(file.getOriginalFilename()));
-
-            final String finalString = rootLocation.toString() + "\\" + file.getOriginalFilename();
+            final String finalString = rootLocation.toString() + Constants.URL_SEP + file.getOriginalFilename();
             mapExcelToHashmap(finalString);
         } catch (final Exception e) {
             throw new RuntimeException("FAIL!");
@@ -65,7 +64,7 @@ public class FileStorageService {
         try {
             final List<FurloughLog> listFurloughLog = new ArrayList();
             final Map<String, FurloughData> map = new HashMap<String, FurloughData>();
-            final File inputExcel = new File(Constants.ROOT_PATH + location);
+            final File inputExcel = new File(location);
             final FileInputStream fis = new FileInputStream(inputExcel);
             final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis);
             final HSSFSheet furloughSheet = myWorkBook.getSheetAt(0);
@@ -119,6 +118,7 @@ public class FileStorageService {
 
             }
             myWorkBook.close();
+            fis.close();
 
             updateDB(listFurloughLog, map);
             return map;
