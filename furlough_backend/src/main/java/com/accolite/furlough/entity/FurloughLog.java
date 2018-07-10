@@ -17,7 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class FurloughLog {
 
     @Id
-    @GenericGenerator(name = "requestIDGenerator", strategy = "com.accolite.furlough.utils.RequestIDGenerator")
+    @GenericGenerator(name = "requestIDGenerator", strategy = "com.accolite.furlough.generator.RequestIDGenerator")
     @GeneratedValue(generator = "requestIDGenerator")
     @Column(name = "requestID")
     private String requestID;

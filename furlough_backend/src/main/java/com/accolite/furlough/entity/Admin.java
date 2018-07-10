@@ -5,20 +5,23 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.accolite.furlough.utils.AdminRoleLevels;
-
 @Entity
 @Table(name = "Admin")
 public class Admin {
 
     @Id
-    private String employeeID;
+    private String email;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "adminRoles")
-    private AdminRoleLevels adminRoles;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
+    }
 
     public String getPassword() {
         return password;
@@ -28,19 +31,4 @@ public class Admin {
         this.password = password;
     }
 
-    public String getEmployeeID() {
-        return employeeID;
-    }
-
-    public void setEmployeeID(final String employeeID) {
-        this.employeeID = employeeID;
-    }
-
-    public AdminRoleLevels getAdminRoles() {
-        return adminRoles;
-    }
-
-    public void setAdminRoles(final AdminRoleLevels adminRoles) {
-        this.adminRoles = adminRoles;
-    }
 }

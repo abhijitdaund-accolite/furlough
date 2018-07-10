@@ -1,4 +1,4 @@
-package com.accolite.furlough.utils;
+package com.accolite.furlough.generator;
 
 import java.io.Serializable;
 import java.sql.Connection;

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.accolite.furlough.dto.AuthenticateResponse;
-import com.accolite.furlough.dto.UserModel;
+import com.accolite.furlough.entity.Admin;
 import com.accolite.furlough.repository.AdminRolesRepository;
 
 @Controller
@@ -21,13 +21,8 @@ public class AdminController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public AuthenticateResponse authenticate(@Valid @RequestBody final UserModel user) {
-
-        // final AuthenticateResponse response;
-
-        System.out.println(user);
-
-        return this.adminRolesRepository.findById(user.getUsername()).map(admin -> {
+    public AuthenticateResponse authenticate(@Valid @RequestBody final Admin user) {
+        return this.adminRolesRepository.findById(user.getEmail()).map(admin -> {
             if (admin.getPassword().equals(user.getPassword())) {
                 return new AuthenticateResponse(admin, true);
             } else {
