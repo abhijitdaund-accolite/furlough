@@ -14,19 +14,25 @@ import java.util.Map.Entry;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.accolite.furlough.entity.FurloughData;
+import com.accolite.furlough.repository.FurloughRequestsRepository;
 import com.accolite.furlough.service.DBUpdater;
 import com.accolite.furlough.utils.Constants;
 
+@Service
 public class ParseInput {
 
-    // final private static String filePath =
-    // "C:\\Users\\Raunak.Maheshwari\\file.xls";
+    @Autowired
+    DBUpdater dbUpdater;
+
     final private static String dateFormat = "MM/dd/yyyy";
     Map<String, FurloughData> map = new HashMap<String, FurloughData>();
 
-    public void mapExcelToHashmp(final String location) {
+    public Map<String, FurloughData> mapExcelToHashmap(final String location,
+            final FurloughRequestsRepository furloughRequestsRepository) throws InterruptedException {
 
         try {
             final File inputExcel = new File(Constants.ROOT_PATH + location);
@@ -77,8 +83,11 @@ public class ParseInput {
 
             }
             myWorkBook.close();
-            // return map;
-            DBUpdater.updateDB(map);
+            final ParseInput inp = new ParseInput();
+            inp.printMapDetails(map);
+            System.out.println("Object is : " + furloughRequestsRepository);
+            DBUpdater.updateDB(null, map, furloughRequestsRepository);
+            return map;
 
         } catch (final IOException e) {
             System.out.println("Error in reading file from system with error message " + e.getMessage());
@@ -87,7 +96,7 @@ public class ParseInput {
             System.out.println("Error in parsing date with error message " + e.getMessage());
             e.printStackTrace();
         }
-        // return null;
+        return null;
     }
 
     public void printMapDetails(final Map<String, FurloughData> map) {
@@ -95,9 +104,20 @@ public class ParseInput {
             System.out.println("MSID : " + entry.getKey() + "\nEmployeeDetails:\n" + entry.getValue());
     }
 
-    /*
-     * public static void main(final String[] args) { final ParseInput input = new
-     * ParseInput(); input.printMapDetails(input.mapExcelToHashmp()); }
-     */
-
+    public static void main(final String[] args) {
+        final ParseInput input = new ParseInput();
+        final Map<String, FurloughData> map = new HashMap<String, FurloughData>();
+        final FurloughData data = new FurloughData();
+        data.setMSID("1234");
+        data.setComments("");
+        data.setDivision("SLkjdfl");
+        data.setLocation("mumbai");
+        data.setResourceName("someresource");
+        data.setVendorName("somevendor");
+        final Map<Date, String> map2 = new HashMap<Date, String>();
+        map2.put(new Date(), "Somestring");
+        data.setFurloughDates(map2);
+        map.put("1234", data);
+        // input.temp(map);
+    }
 }

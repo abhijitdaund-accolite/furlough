@@ -1,24 +1,40 @@
 package com.accolite.furlough.utils;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 
 @Embeddable
 public class FurloughRequestsIDTracker
         implements
         Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
+    @Override
+    public String toString() {
+        return "FurloughRequestsIDTracker [MSID=" + MSID + ", furloughDate=" + furloughDate + "]";
+    }
+
+    @NotNull
     @Column(name = "MSID")
     private String MSID;
 
+    @NotNull
     @Column(name = "furloughDate")
     private Date furloughDate;
 
-    public FurloughRequestsIDTracker(final String MSID, final Date furloughDate) {
-        this.furloughDate = furloughDate;
+    public FurloughRequestsIDTracker() {
+
+    }
+
+    public FurloughRequestsIDTracker(final String MSID, final Date date) {
+        this.furloughDate = date;
         this.MSID = MSID;
     }
 
@@ -52,9 +68,9 @@ public class FurloughRequestsIDTracker
                 && this.getFurloughDate() == furloughRequestID.getFurloughDate();
     }
 
-    /*
-     * @Override public int hashCode() { //TODO code to calculate HashCode PRIORITY
-     * HIGH }
-     */
+    @Override
+    public int hashCode() {
+        return 0; // TODO code to calculate HashCode PRIORITY
+    }
 
 }
