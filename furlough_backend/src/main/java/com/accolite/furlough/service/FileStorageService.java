@@ -132,6 +132,67 @@ public class FileStorageService {
         }
         return null;
     }
+    
+    
+    
+    public List<FurloughLog> mapExcelToList(final String location) throws InterruptedException {
+
+        try {
+            final List<FurloughLog> listFurloughLog = new ArrayList();
+            final File inputExcel = new File(Constants.ROOT_PATH + location);
+            final FileInputStream fis = new FileInputStream(inputExcel);
+            final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis);
+            final HSSFSheet furloughSheet = myWorkBook.getSheetAt(0);
+
+            final Iterator<Row> rowIterator = furloughSheet.iterator();
+            while (rowIterator.hasNext()) {
+                final Row row = rowIterator.next();
+                if (row.getCell(0) == null) // To break the moment we are done with rows having data
+                    break;
+                if (row.getCell(0).toString().equals("MSID")) // Skipping the first header row
+                    continue;
+
+                // If the employee has already been parsed in a previous row, we just update/add
+                // FurloughDate and Status
+                
+               
+                    final FurloughLog furlough = new FurloughLog();
+                    final Date furloughDate = new SimpleDateFormat(Constants.DATE_FORMAT)
+                            .parse(row.getCell(3).toString());
+                    
+                    
+                    furlough.setmSID((row.getCell(0).toString()));
+                    furlough.setFurloughStatus(row.getCell(4).toString());
+                    furlough.setFurloughDate(furloughDate);
+                    furlough.setLogTime(new Date());
+                    
+                    
+                    listFurloughLog.add(furlough);
+               
+                
+
+            }
+            myWorkBook.close();
+            
+            //final ParseInput inp = new ParseInput();
+            //inp.printMapDetails(map);
+            
+            System.out.println("Object is : " + furloughRequestsRepository);
+            return listFurloughLog;
+
+        } catch (final IOException e) {
+            System.out.println("Error in reading file from system with error message " + e.getMessage());
+            e.printStackTrace();
+        } catch (final ParseException e) {
+            System.out.println("Error in parsing date with error message " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    
+    
+
 
     public Resource loadFile(final String filename) {
         try {
