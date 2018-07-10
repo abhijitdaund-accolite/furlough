@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.accolite.furlough.entity.FurloughData;
 import com.accolite.furlough.entity.FurloughLog;
 import com.accolite.furlough.entity.FurloughRequests;
+import com.accolite.furlough.repository.FurloughLogRepository;
 import com.accolite.furlough.repository.FurloughRequestsRepository;
 import com.accolite.furlough.utils.Constants;
 import com.accolite.furlough.utils.FurloughRequestsIDTracker;
@@ -41,12 +43,14 @@ public class FileStorageService {
     @Autowired
     private FurloughRequestsRepository furloughRequestsRepository;
 
+    @Autowired
+    private FurloughLogRepository furloughLogRepository;
+
     Logger log = LoggerFactory.getLogger(this.getClass().getName());
     private final Path rootLocation = Paths.get(Constants.UPLOAD_DIR);
 
     public void store(final MultipartFile file) {
         try {
-            System.out.println("Creating furloughRequestsRepository object in store : " + furloughRequestsRepository);
             Files.copy(file.getInputStream(), this.rootLocation.resolve(file.getOriginalFilename()));
 
             final String finalString = rootLocation.toString() + "\\" + file.getOriginalFilename();
@@ -59,6 +63,7 @@ public class FileStorageService {
     public Map<String, FurloughData> mapExcelToHashmap(final String location) throws InterruptedException {
 
         try {
+            final List<FurloughLog> listFurloughLog = new ArrayList();
             final Map<String, FurloughData> map = new HashMap<String, FurloughData>();
             final File inputExcel = new File(Constants.ROOT_PATH + location);
             final FileInputStream fis = new FileInputStream(inputExcel);
@@ -72,13 +77,20 @@ public class FileStorageService {
                     break;
                 if (row.getCell(0).toString().equals("MSID")) // Skipping the first header row
                     continue;
+                final FurloughLog furloughLog = new FurloughLog();
+                final Date furloughDate = new SimpleDateFormat(Constants.DATE_FORMAT).parse(row.getCell(3).toString());
 
+                furloughLog.setmSID((row.getCell(0).toString()));
+                furloughLog.setFurloughStatus(row.getCell(4).toString());
+                furloughLog.setFurloughDate(furloughDate);
+                furloughLog.setLogTime(new Date());
+
+                listFurloughLog.add(furloughLog);
                 // If the employee has already been parsed in a previous row, we just update/add
                 // FurloughDate and Status
                 if (map.containsKey(row.getCell(0).toString())) {
                     final FurloughData tempFurlough = map.get(row.getCell(0).toString());
 
-                    final Date furloughDate = new SimpleDateFormat("MM/dd/yyyy").parse(row.getCell(3).toString());
                     final Map<Date, String> dateMap = tempFurlough.getFurloughDates();
                     dateMap.put(furloughDate, row.getCell(4).toString());
                     tempFurlough.setFurloughDates(dateMap);
@@ -94,8 +106,6 @@ public class FileStorageService {
                     furlough.setResourceName(row.getCell(1).toString());
                     furlough.setVendorName(row.getCell(2).toString());
 
-                    final Date furloughDate = new SimpleDateFormat(Constants.DATE_FORMAT)
-                            .parse(row.getCell(3).toString());
                     final Map<Date, String> dateMap = new HashMap<Date, String>();
                     dateMap.put(furloughDate, row.getCell(4).toString());
                     furlough.setFurloughDates(dateMap);
@@ -109,10 +119,8 @@ public class FileStorageService {
 
             }
             myWorkBook.close();
-            final ParseInput inp = new ParseInput();
-            inp.printMapDetails(map);
-            System.out.println("Object is : " + furloughRequestsRepository);
-            updateDB(null, map);
+
+            updateDB(listFurloughLog, map);
             return map;
 
         } catch (final IOException e) {
@@ -153,22 +161,19 @@ public class FileStorageService {
 
     public FurloughRequests requestInserter(final FurloughRequests request) {
 
-        return furloughRequestsRepository.findById(request.getFurloughID()).map(currentRequest -> {
-            currentRequest.setFurloughStatus(request.getFurloughStatus());
-            return furloughRequestsRepository.save(currentRequest);
-        }).orElse(furloughRequestsRepository.save(request));
-
+        if (furloughRequestsRepository.existsById(request.getFurloughID())) {
+            final FurloughRequests requestToBeUpdated = furloughRequestsRepository.getOne(request.getFurloughID());
+            requestToBeUpdated.setFurloughStatus(request.getFurloughStatus());
+            return furloughRequestsRepository.save(requestToBeUpdated);
+        } else {
+            return furloughRequestsRepository.save(request);
+        }
     }
 
-    // public FurloughLog logInserter( FurloughLog request) {
-    // return furloughLogRepository.save(request);
-    // }
-
-    public FurloughRequests updateDB(final List<FurloughLog> logList, final Map<String, FurloughData> map) {
+    public void updateDB(final List<FurloughLog> logList, final Map<String, FurloughData> map) {
 
         for (final Entry<String, FurloughData> entry : map.entrySet()) {
             final FurloughData tempObj = entry.getValue();
-            System.out.println(tempObj);
             final Map<Date, String> requestDates = tempObj.getFurloughDates();
             for (final Entry<Date, String> entry1 : requestDates.entrySet()) {
 
@@ -179,10 +184,14 @@ public class FileStorageService {
                 final FurloughRequestsIDTracker fur = new FurloughRequestsIDTracker(entry.getKey(), entry1.getKey());
 
                 fRequest.setFurloughID(fur);
-                System.out.println(fRequest);
+
                 requestInserter(fRequest);
             }
         }
-        return null;
+
+        final Iterator<FurloughLog> iterator = logList.iterator();
+        while (iterator.hasNext()) {
+            furloughLogRepository.save(iterator.next());
+        }
     }
 }
