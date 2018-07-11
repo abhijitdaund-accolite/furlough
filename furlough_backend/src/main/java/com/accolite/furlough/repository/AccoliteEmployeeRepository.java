@@ -1,12 +1,13 @@
 package com.accolite.furlough.repository;
 
-import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import org.springframework.stereotype.Repository;
 
 import com.accolite.furlough.entity.AccoliteEmployee;
 
 @Repository
-public interface AccoliteEmployeeRepository extends JpaRepository<AccoliteEmployee,String>{
-	
+public interface AccoliteEmployeeRepository
+        extends
+        JpaRepository<AccoliteEmployee, String> {
+    AccoliteEmployee findByMSID(String mSId);
 }
