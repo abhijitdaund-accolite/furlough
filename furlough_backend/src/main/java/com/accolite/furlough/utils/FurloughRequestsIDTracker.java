@@ -18,12 +18,12 @@ public class FurloughRequestsIDTracker
 
     @Override
     public String toString() {
-        return "FurloughRequestsIDTracker [MSID=" + MSID + ", furloughDate=" + furloughDate + "]";
+        return "FurloughRequestsIDTracker [MSID=" + mSID + ", furloughDate=" + furloughDate + "]";
     }
 
     @NotNull
-    @Column(name = "MSID")
-    private String MSID;
+    @Column(name = "mSID")
+    private String mSID;
 
     @NotNull
     @Column(name = "furloughDate")
@@ -35,15 +35,19 @@ public class FurloughRequestsIDTracker
 
     public FurloughRequestsIDTracker(final String MSID, final Date date) {
         this.furloughDate = date;
-        this.MSID = MSID;
+        this.mSID = MSID;
     }
 
-    public String getMSID() {
-        return MSID;
+    public String getmSID() {
+        return mSID;
     }
 
-    public void setMsId(final String MSID) {
-        this.MSID = MSID;
+    public void setmSID(final String mSID) {
+        this.mSID = mSID;
+    }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
     }
 
     public Date getFurloughDate() {
@@ -64,7 +68,7 @@ public class FurloughRequestsIDTracker
         }
         final FurloughRequestsIDTracker furloughRequestID = (FurloughRequestsIDTracker) obj;
 
-        return this.getMSID() == furloughRequestID.getMSID()
+        return this.getmSID() == furloughRequestID.getmSID()
                 && this.getFurloughDate() == furloughRequestID.getFurloughDate();
     }
 

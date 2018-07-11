@@ -38,7 +38,7 @@ public class MSEmployeeController {
     @ResponseBody
     public MSEmployee getMSEmployee(@PathVariable("id") final String msid) {
 
-        return this.msEmployeeRepository.findById(msid).get();
+        return msEmployeeRepository.findById(msid).get();
     }
 
 }

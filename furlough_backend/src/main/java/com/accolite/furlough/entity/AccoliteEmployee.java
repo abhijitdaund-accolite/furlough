@@ -23,15 +23,15 @@ public class AccoliteEmployee {
     private String employeeContact;
 
     // @OneToOne(mappedBy = "accoliteEmployee")
-    @Column(name = "msid")
-    private String msEmployee;
+    @Column(name = "mSID")
+    private String mSID;
 
-    public String getMsEmployee() {
-        return msEmployee;
+    public String getmSID() {
+        return mSID;
     }
 
-    public void setMsEmployee(final String msEmployee) {
-        this.msEmployee = msEmployee;
+    public void setmSID(final String mSID) {
+        this.mSID = mSID;
     }
 
     public String getEmployeeID() {
