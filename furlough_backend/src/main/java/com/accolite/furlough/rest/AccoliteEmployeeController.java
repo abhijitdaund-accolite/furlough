@@ -14,6 +14,7 @@ import com.accolite.furlough.service.FileStorageService;
 
 @RestController
 public class AccoliteEmployeeController {
+    final String location = "C:\\Users\\Raunak.Maheshwari\\Documents\\hrdata.xls";
 
     @Autowired
     private AccoliteEmployeeRepository accoliteEmployeeRepository;
@@ -22,9 +23,9 @@ public class AccoliteEmployeeController {
     FileStorageService filestorageService;
 
     @RequestMapping(value = "/accolite/populate")
-    public void populateAccoliteEmployees() {
-        final String location = "";
-        // filestorageService.populateMSEmployees(location);
+    public String populateAccoliteEmployees() {
+        filestorageService.populateAccoliteEmployees(location);
+        return "Populated Accolite Employees successfully!";
     }
 
     @RequestMapping(value = "/accolite_employees")

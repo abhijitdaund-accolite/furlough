@@ -9,6 +9,20 @@ import javax.persistence.Table;
 @Table(name = "AccoliteEmployee")
 public class AccoliteEmployee {
 
+    public AccoliteEmployee() {
+        super();
+    }
+
+    public AccoliteEmployee(final String employeeID, final String employeeName, final String employeeEmail,
+            final String employeeContact, final String mSID) {
+        super();
+        this.employeeID = employeeID;
+        this.employeeName = employeeName;
+        this.employeeEmail = employeeEmail;
+        this.employeeContact = employeeContact;
+        this.mSID = mSID;
+    }
+
     @Id
     @Column(name = "employeeID")
     private String employeeID;
