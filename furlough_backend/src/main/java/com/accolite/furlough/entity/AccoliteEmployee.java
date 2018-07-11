@@ -3,7 +3,6 @@ package com.accolite.furlough.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -23,14 +22,15 @@ public class AccoliteEmployee {
     @Column(name = "employeeContact")
     private String employeeContact;
 
-    @OneToOne(mappedBy = "accoliteEmployee")
-    private MSEmployee msEmployee;
+    // @OneToOne(mappedBy = "accoliteEmployee")
+    @Column(name = "msid")
+    private String msEmployee;
 
-    public MSEmployee getMsEmployee() {
+    public String getMsEmployee() {
         return msEmployee;
     }
 
-    public void setMsEmployee(final MSEmployee msEmployee) {
+    public void setMsEmployee(final String msEmployee) {
         this.msEmployee = msEmployee;
     }
 

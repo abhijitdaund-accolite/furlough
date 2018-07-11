@@ -32,8 +32,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.accolite.furlough.entity.FurloughData;
 import com.accolite.furlough.entity.FurloughLog;
 import com.accolite.furlough.entity.FurloughRequests;
+import com.accolite.furlough.entity.MSEmployee;
 import com.accolite.furlough.repository.FurloughLogRepository;
 import com.accolite.furlough.repository.FurloughRequestsRepository;
+import com.accolite.furlough.repository.MSEmployeeRepository;
 import com.accolite.furlough.utils.Constants;
 import com.accolite.furlough.utils.FurloughRequestsIDTracker;
 
@@ -45,6 +47,9 @@ public class FileStorageService {
 
     @Autowired
     private FurloughLogRepository furloughLogRepository;
+
+    @Autowired
+    private MSEmployeeRepository msEmployeeRepository;
 
     Logger log = LoggerFactory.getLogger(this.getClass().getName());
     private final Path rootLocation = Paths.get(Constants.ROOT_PATH + Constants.UPLOAD_DIR);
@@ -62,7 +67,7 @@ public class FileStorageService {
     public Map<String, FurloughData> mapExcelToHashmap(final String location) throws InterruptedException {
 
         try {
-            final List<FurloughLog> listFurloughLog = new ArrayList();
+            final List<FurloughLog> listFurloughLog = new ArrayList<FurloughLog>();
             final Map<String, FurloughData> map = new HashMap<String, FurloughData>();
             final File inputExcel = new File(location);
             final FileInputStream fis = new FileInputStream(inputExcel);
@@ -132,13 +137,11 @@ public class FileStorageService {
         }
         return null;
     }
-    
-    
-    
+
     public List<FurloughLog> mapExcelToList(final String location) throws InterruptedException {
 
         try {
-            final List<FurloughLog> listFurloughLog = new ArrayList();
+            final List<FurloughLog> listFurloughLog = new ArrayList<FurloughLog>();
             final File inputExcel = new File(Constants.ROOT_PATH + location);
             final FileInputStream fis = new FileInputStream(inputExcel);
             final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis);
@@ -154,29 +157,23 @@ public class FileStorageService {
 
                 // If the employee has already been parsed in a previous row, we just update/add
                 // FurloughDate and Status
-                
-               
-                    final FurloughLog furlough = new FurloughLog();
-                    final Date furloughDate = new SimpleDateFormat(Constants.DATE_FORMAT)
-                            .parse(row.getCell(3).toString());
-                    
-                    
-                    furlough.setmSID((row.getCell(0).toString()));
-                    furlough.setFurloughStatus(row.getCell(4).toString());
-                    furlough.setFurloughDate(furloughDate);
-                    furlough.setLogTime(new Date());
-                    
-                    
-                    listFurloughLog.add(furlough);
-               
-                
+
+                final FurloughLog furlough = new FurloughLog();
+                final Date furloughDate = new SimpleDateFormat(Constants.DATE_FORMAT).parse(row.getCell(3).toString());
+
+                furlough.setmSID((row.getCell(0).toString()));
+                furlough.setFurloughStatus(row.getCell(4).toString());
+                furlough.setFurloughDate(furloughDate);
+                furlough.setLogTime(new Date());
+
+                listFurloughLog.add(furlough);
 
             }
             myWorkBook.close();
-            
-            //final ParseInput inp = new ParseInput();
-            //inp.printMapDetails(map);
-            
+
+            // final ParseInput inp = new ParseInput();
+            // inp.printMapDetails(map);
+
             System.out.println("Object is : " + furloughRequestsRepository);
             return listFurloughLog;
 
@@ -189,10 +186,6 @@ public class FileStorageService {
         }
         return null;
     }
-
-    
-    
-
 
     public Resource loadFile(final String filename) {
         try {
@@ -228,6 +221,33 @@ public class FileStorageService {
             return furloughRequestsRepository.save(requestToBeUpdated);
         } else {
             return furloughRequestsRepository.save(request);
+        }
+    }
+
+    public void populateMSEmployees(final String location) {
+        try {
+            final File inputExcel = new File(location);
+            final FileInputStream fis = new FileInputStream(inputExcel);
+            final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis);
+            final HSSFSheet furloughSheet = myWorkBook.getSheetAt(0);
+            final Iterator<Row> rowIterator = furloughSheet.iterator();
+            while (rowIterator.hasNext()) {
+                final Row row = rowIterator.next();
+                if (row.getCell(0) == null) // To break the moment we are done with rows having data
+                    break;
+                if (row.getCell(0).toString().equals("MSID")) // Skipping the first header row
+                    continue;
+                final MSEmployee msEmployee = new MSEmployee(row.getCell(0).toString(), row.getCell(1).toString(),
+                        row.getCell(2).toString(), row.getCell(3).toString(), row.getCell(4).toString(),
+                        row.getCell(5).toString());
+                msEmployeeRepository.save(msEmployee);
+            }
+            myWorkBook.close();
+            fis.close();
+
+        } catch (final IOException e) {
+            System.out.println("Error in reading file from system with error message " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

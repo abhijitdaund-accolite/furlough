@@ -1,12 +1,8 @@
 package com.accolite.furlough.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -18,7 +14,7 @@ public class MSEmployee {
     }
 
     public MSEmployee(final String mSID, final String resourceName, final String vendorName, final String division,
-            final String officeLocation, final AccoliteEmployee accoliteEmployee) {
+            final String officeLocation, final String accoliteEmployee) {
         super();
         MSID = mSID;
         this.resourceName = resourceName;
@@ -44,9 +40,8 @@ public class MSEmployee {
     @Column(name = "officeLocation")
     private String officeLocation;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "employeeID")
-    private AccoliteEmployee accoliteEmployee;
+    @Column(name = "accoliteEmployee")
+    private String accoliteEmployee;
 
     public String getResourceName() {
         return resourceName;
@@ -86,6 +81,14 @@ public class MSEmployee {
 
     public void setMSID(final String mSID) {
         MSID = mSID;
+    }
+
+    public String getAccoliteEmployee() {
+        return accoliteEmployee;
+    }
+
+    public void setAccoliteEmployee(final String accoliteEmployee) {
+        this.accoliteEmployee = accoliteEmployee;
     }
 
 }
