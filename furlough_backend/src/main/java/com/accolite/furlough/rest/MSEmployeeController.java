@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +41,12 @@ public class MSEmployeeController {
     public MSEmployee getMSEmployee(@PathVariable("id") final String msid) {
 
         return msEmployeeRepository.findById(msid).get();
+    }
+
+    @PostMapping("/ms_employee")
+    @ResponseBody
+    public MSEmployee postEmployee(@RequestBody final MSEmployee msEmployee) {
+        return msEmployeeRepository.save(msEmployee);
     }
 
 }
