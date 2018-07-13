@@ -56,11 +56,11 @@ public class FurloughRequestsController {
 		}
 		
 		
-		java.sql.Date startDate = new java.sql.Date(sDate.getTime());
-		java.sql.Date endDate = new java.sql.Date(eDate.getTime());
-
-		System.out.println(startDate);
-		System.out.println(endDate);
+//		java.sql.Date startDate = new java.sql.Date(sDate.getTime());
+//		java.sql.Date endDate = new java.sql.Date(eDate.getTime());
+//
+//		System.out.println(startDate);
+//		System.out.println(endDate);
 		
 		
 		

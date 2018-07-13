@@ -57,7 +57,7 @@ public class FileStorageService {
     @Autowired
     private AccoliteEmployeeRepository accoliteEmployeeRepository;
 
-    Logger log = LoggerFactory.getLogger(this.getClass().getName());
+    private final static Logger log = LoggerFactory.getLogger(FileStorageService.class);
     private final Path rootLocation = Paths.get(Constants.ROOT_PATH + Constants.UPLOAD_DIR);
 
     public void store(final MultipartFile file) {
@@ -66,7 +66,8 @@ public class FileStorageService {
             final String finalString = rootLocation.toString() + Constants.URL_SEP + file.getOriginalFilename();
             mapExcelToHashmap(finalString);
         } catch (final Exception e) {
-            throw new RuntimeException("FAIL!");
+           log.error("Failed to store the file. Error: "+e.getMessage());
+        	// throw new RuntimeException("FAIL!");
         }
     }
 
@@ -135,11 +136,13 @@ public class FileStorageService {
             return map;
 
         } catch (final IOException e) {
-            System.out.println("Error in reading file from system with error message " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error in reading file from system with error message "+e.getMessage());
+        	//System.out.println("Error in reading file from system with error message " + e.getMessage());
+          //  e.printStackTrace();
         } catch (final ParseException e) {
-            System.out.println("Error in parsing date with error message " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error in parsing date with error message " + e.getMessage());
+        //	System.out.println("Error in parsing date with error message " + e.getMessage());
+           // e.printStackTrace();
         }
         return null;
     }
@@ -179,16 +182,18 @@ public class FileStorageService {
 
             // final ParseInput inp = new ParseInput();
             // inp.printMapDetails(map);
-
-            System.out.println("Object is : " + furloughRequestsRepository);
+            log.info("Object is : "+furloughRequestsRepository);
+           // System.out.println("Object is : " + furloughRequestsRepository);
             return listFurloughLog;
 
         } catch (final IOException e) {
-            System.out.println("Error in reading file from system with error message " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error in reading file from system with error message "+e.getMessage());
+        	//System.out.println("Error in reading file from system with error message " + e.getMessage());
+        //    e.printStackTrace();
         } catch (final ParseException e) {
-            System.out.println("Error in parsing date with error message " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error in parsing date with error message "+e.getMessage() );
+        	//System.out.println("Error in parsing date with error message " + e.getMessage());
+          //  e.printStackTrace();
         }
         return null;
     }
@@ -200,11 +205,14 @@ public class FileStorageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException("FAIL!");
+                log.error("Fail to load the file");
+            	//throw new RuntimeException("FAIL!");
             }
         } catch (final MalformedURLException e) {
-            throw new RuntimeException("FAIL!");
+            log.error("Failed to load the file Error: "+e.getMessage());
+        	//throw new RuntimeException("FAIL!");
         }
+        return null;
     }
 
     public void deleteAll() {
@@ -215,7 +223,8 @@ public class FileStorageService {
         try {
             Files.createDirectory(rootLocation);
         } catch (final IOException e) {
-            throw new RuntimeException("Could not initialize storage!");
+          log.error("Could not initialize storage Error: "+e.getMessage());
+        	//  throw new RuntimeException("Could not initialize storage!");
         }
     }
 
@@ -252,8 +261,9 @@ public class FileStorageService {
             fis.close();
 
         } catch (final IOException e) {
-            System.out.println("Error in reading file from system with error message " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error in reading file from system with error message "+e.getMessage());
+        	//System.out.println("Error in reading file from system with error message " + e.getMessage());
+            //e.printStackTrace();
         }
     }
 
@@ -280,15 +290,17 @@ public class FileStorageService {
                 final AccoliteEmployee accoliteEmployee = new AccoliteEmployee(
                         formatter.formatCellValue(row.getCell(5)), row.getCell(1).toString(), row.getCell(6).toString(),
                         row.getCell(10).toString(), row.getCell(0).toString());
-                System.out.println(accoliteEmployee.getEmployeeID());
+                log.info("Employee ID is :"+accoliteEmployee.getEmployeeID());
+                //System.out.println(accoliteEmployee.getEmployeeID());
                 accoliteEmployeeRepository.save(accoliteEmployee);
             }
             myWorkBook.close();
             fis.close();
 
         } catch (final IOException e) {
-            System.out.println("Error in reading file from system with error message " + e.getMessage());
-            e.printStackTrace();
+           log.error("Error in reading file system with error message "+e.getMessage());
+           // System.out.println("Error in reading file from system with error message " + e.getMessage());
+          //  e.printStackTrace();
         }
     }
 
