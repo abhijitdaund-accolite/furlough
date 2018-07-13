@@ -119,15 +119,16 @@ public class MSEmployee {
         super();
     }
 
-    public MSEmployee(final String mSID, final String resourceName, final String vendorName, final String division,
-            final String officeLocation, final String accoliteEmployee) {
+    public MSEmployee(final String mSID, final String accoliteEmployee, final String resourceName,
+            final String vendorName, final String division, final String officeLocation, final String email) {
         super();
         MSID = mSID;
+        this.accoliteEmployee = accoliteEmployee;
         this.resourceName = resourceName;
         this.vendorName = vendorName;
         this.division = division;
         this.officeLocation = officeLocation;
-        this.accoliteEmployee = accoliteEmployee;
+        this.email = email;
     }
 
     @Id
@@ -148,6 +149,17 @@ public class MSEmployee {
 
     @Column(name = "accoliteEmployee")
     private String accoliteEmployee;
+
+    @Column(name = "email")
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
+    }
 
     public String getResourceName() {
         return resourceName;

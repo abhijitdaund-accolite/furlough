@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.accolite.furlough.dto.EmployeeDetailsResponse;
-import com.accolite.furlough.repository.AccoliteEmployeeRepository;
+import com.accolite.furlough.entity.MSEmployee;
 import com.accolite.furlough.repository.MSEmployeeRepository;
 
 @RestController
@@ -15,9 +14,6 @@ public class EmployeeController {
 
     @Autowired
     private MSEmployeeRepository msEmployeeRepository;
-
-    @Autowired
-    private AccoliteEmployeeRepository accoliteEmployeeRepository;
 
     // @RequestMapping("/employees")
     // @ResponseBody
@@ -28,11 +24,10 @@ public class EmployeeController {
     // }
     @GetMapping("/employees/{msID}")
     @ResponseBody
-    public EmployeeDetailsResponse getEmployeeDetails(@PathVariable final String msID) {
-        final EmployeeDetailsResponse response = new EmployeeDetailsResponse();
-        response.setAccoliteEmployee(accoliteEmployeeRepository.findByMSID(msID));
-        response.setMsEmployee(msEmployeeRepository.findById(msID).get());
-        return response;
+    public MSEmployee getEmployeeDetails(@PathVariable final String msID) {
+        final MSEmployee msEmployee;
+        msEmployee = msEmployeeRepository.getOne(msID);
+        return msEmployee;
     }
 
 }
