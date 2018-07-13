@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.QueryParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,12 +33,19 @@ public class FurloughRequestsController {
     @Autowired
     private MSEmployeeRepository msEmployeeRepository;
 
-    @RequestMapping("/logsrange/{from}/{to}")
-    public List<FurloughReport> getRequestInDateRange(@PathVariable final String from, @PathVariable final String to) {
-
+    // http://10.4.12.118:8080/furlough/requests?from=2014-01-01&to=2019-07-01
+    @RequestMapping("/requests")
+    public List<FurloughReport> getRequestInDateRange(@QueryParam(value = "from") String from,
+            @QueryParam(value = "to") String to) {
         final SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date sDate;
         java.util.Date eDate;
+
+        // If no query parameters are passed, we set a default date
+        if (from == null || to == null) {
+            from = "2014-01-01";
+            to = "2020-01-01";
+        }
 
         try {
 
