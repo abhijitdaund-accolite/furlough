@@ -33,12 +33,17 @@ import org.springframework.web.multipart.MultipartFile;
 import com.accolite.furlough.entity.FurloughData;
 import com.accolite.furlough.entity.FurloughLog;
 import com.accolite.furlough.entity.FurloughRequests;
+import com.accolite.furlough.entity.MSEmployee;
 // import com.accolite.furlough.repository.AccoliteEmployeeRepository;
 import com.accolite.furlough.repository.FurloughLogRepository;
 import com.accolite.furlough.repository.FurloughRequestsRepository;
 import com.accolite.furlough.repository.MSEmployeeRepository;
 import com.accolite.furlough.utils.Constants;
 import com.accolite.furlough.utils.FurloughRequestsIDTracker;
+
+// formatter.formatCellValue(row.getCell(5))
+// final DataFormatter formatter = new DataFormatter(); // creating formatter
+// using the default locale
 
 @Service
 public class FileStorageService {
@@ -52,9 +57,6 @@ public class FileStorageService {
     @Autowired
     private MSEmployeeRepository msEmployeeRepository;
 
-    // @Autowired
-    // private AccoliteEmployeeRepository accoliteEmployeeRepository;
-
     private final static Logger log = LoggerFactory.getLogger(FileStorageService.class);
     private final Path rootLocation = Paths.get(Constants.ROOT_PATH + Constants.UPLOAD_DIR);
 
@@ -64,8 +66,8 @@ public class FileStorageService {
             final String finalString = rootLocation.toString() + Constants.URL_SEP + file.getOriginalFilename();
             mapExcelToHashmap(finalString);
         } catch (final Exception e) {
-           log.error("Failed to store the file. Error: "+e.getMessage());
-        	// throw new RuntimeException("FAIL!");
+            log.error("Failed to store the file. Error: " + e.getMessage());
+            // throw new RuntimeException("FAIL!");
         }
     }
 
@@ -95,6 +97,7 @@ public class FileStorageService {
                 furloughLog.setLogTime(new Date());
 
                 listFurloughLog.add(furloughLog);
+
                 // If the employee has already been parsed in a previous row, we just update/add
                 // FurloughDate and Status
                 if (map.containsKey(row.getCell(0).toString())) {
@@ -134,13 +137,9 @@ public class FileStorageService {
             return map;
 
         } catch (final IOException e) {
-            log.error("Error in reading file from system with error message "+e.getMessage());
-        	//System.out.println("Error in reading file from system with error message " + e.getMessage());
-          //  e.printStackTrace();
+            log.error("Error in reading file from system with error message " + e.getMessage());
         } catch (final ParseException e) {
             log.error("Error in parsing date with error message " + e.getMessage());
-        //	System.out.println("Error in parsing date with error message " + e.getMessage());
-           // e.printStackTrace();
         }
         return null;
     }
@@ -178,20 +177,13 @@ public class FileStorageService {
             }
             myWorkBook.close();
 
-            // final ParseInput inp = new ParseInput();
-            // inp.printMapDetails(map);
-            log.info("Object is : "+furloughRequestsRepository);
-           // System.out.println("Object is : " + furloughRequestsRepository);
+            log.info("Object is : " + furloughRequestsRepository);
             return listFurloughLog;
 
         } catch (final IOException e) {
-            log.error("Error in reading file from system with error message "+e.getMessage());
-        	//System.out.println("Error in reading file from system with error message " + e.getMessage());
-        //    e.printStackTrace();
+            log.error("Error in reading file from system with error message " + e.getMessage());
         } catch (final ParseException e) {
-            log.error("Error in parsing date with error message "+e.getMessage() );
-        	//System.out.println("Error in parsing date with error message " + e.getMessage());
-          //  e.printStackTrace();
+            log.error("Error in parsing date with error message " + e.getMessage());
         }
         return null;
     }
@@ -204,11 +196,9 @@ public class FileStorageService {
                 return resource;
             } else {
                 log.error("Fail to load the file");
-            	//throw new RuntimeException("FAIL!");
             }
         } catch (final MalformedURLException e) {
-            log.error("Failed to load the file Error: "+e.getMessage());
-        	//throw new RuntimeException("FAIL!");
+            log.error("Failed to load the file Error: " + e.getMessage());
         }
         return null;
     }
@@ -221,8 +211,7 @@ public class FileStorageService {
         try {
             Files.createDirectory(rootLocation);
         } catch (final IOException e) {
-          log.error("Could not initialize storage Error: "+e.getMessage());
-        	//  throw new RuntimeException("Could not initialize storage!");
+            log.error("Could not initialize storage Error: " + e.getMessage());
         }
     }
 
@@ -238,7 +227,6 @@ public class FileStorageService {
     }
 
     public void populateMSEmployees(final String location) {
-<<<<<<< HEAD
         try {
             final File inputExcel = new File(location);
             final FileInputStream fis = new FileInputStream(inputExcel);
@@ -253,125 +241,15 @@ public class FileStorageService {
                     continue;
                 final MSEmployee msEmployee = new MSEmployee(row.getCell(0).toString(), row.getCell(1).toString(),
                         row.getCell(2).toString(), row.getCell(3).toString(), row.getCell(4).toString(),
-                        row.getCell(5).toString());
+                        row.getCell(5).toString(), "");
                 msEmployeeRepository.save(msEmployee);
             }
             myWorkBook.close();
             fis.close();
 
         } catch (final IOException e) {
-            log.error("Error in reading file from system with error message "+e.getMessage());
-        	//System.out.println("Error in reading file from system with error message " + e.getMessage());
-            //e.printStackTrace();
+            log.error("Error in reading file from system with error message " + e.getMessage());
         }
-=======
-        // try {
-        // final File inputExcel = new File(location);
-        // final FileInputStream fis = new FileInputStream(inputExcel);
-        // final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis);
-        // final HSSFSheet furloughSheet = myWorkBook.getSheetAt(0);
-        // final Iterator<Row> rowIterator = furloughSheet.iterator();
-        // while (rowIterator.hasNext()) {
-        // final Row row = rowIterator.next();
-        // if (row.getCell(0) == null) // To break the moment we are done with rows
-        // having data
-        // break;
-        // if (row.getCell(0).toString().equals("MSID")) // Skipping the first header
-        // row
-        // continue;
-        // final MSEmployee msEmployee = new MSEmployee(row.getCell(0).toString(),
-        // row.getCell(1).toString(),
-        // row.getCell(2).toString(), row.getCell(3).toString(),
-        // row.getCell(4).toString(),
-        // row.getCell(5).toString());
-        // msEmployeeRepository.save(msEmployee);
-        // }
-        // myWorkBook.close();
-        // fis.close();
-        //
-        // } catch (final IOException e) {
-        // System.out.println("Error in reading file from system with error message " +
-        // e.getMessage());
-        // e.printStackTrace();
-        // }
->>>>>>> branch 'dev' of https://github.com/abhijitdaund-accolite/furlough.git
-    }
-
-    public void populateAccoliteEmployees(final String location) {
-<<<<<<< HEAD
-        try {
-            final File inputExcel = new File(location);
-            final FileInputStream fis = new FileInputStream(inputExcel);
-            final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis);
-            final HSSFSheet furloughSheet = myWorkBook.getSheetAt(0);
-            final Iterator<Row> rowIterator = furloughSheet.iterator();
-            while (rowIterator.hasNext()) {
-                final Row row = rowIterator.next();
-                if (row.getCell(0) == null) // To break the moment we are done with rows having data
-                    break;
-                if (row.getCell(0).toString().equals("MSID")) // Skipping the first header row
-                    continue;
-
-                final DataFormatter formatter = new DataFormatter(); // creating formatter using the default locale
-                // final Cell cell = row.getCell(0);
-                // final String j_username = formatter.formatCellValue(cell); // Returns the
-                // formatted value of a cell as a
-                // String regardless of the cell type.
-
-                final AccoliteEmployee accoliteEmployee = new AccoliteEmployee(
-                        formatter.formatCellValue(row.getCell(5)), row.getCell(1).toString(), row.getCell(6).toString(),
-                        row.getCell(10).toString(), row.getCell(0).toString());
-                log.info("Employee ID is :"+accoliteEmployee.getEmployeeID());
-                //System.out.println(accoliteEmployee.getEmployeeID());
-                accoliteEmployeeRepository.save(accoliteEmployee);
-            }
-            myWorkBook.close();
-            fis.close();
-
-        } catch (final IOException e) {
-           log.error("Error in reading file system with error message "+e.getMessage());
-           // System.out.println("Error in reading file from system with error message " + e.getMessage());
-          //  e.printStackTrace();
-        }
-=======
-        // try {
-        // final File inputExcel = new File(location);
-        // final FileInputStream fis = new FileInputStream(inputExcel);
-        // final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis);
-        // final HSSFSheet furloughSheet = myWorkBook.getSheetAt(0);
-        // final Iterator<Row> rowIterator = furloughSheet.iterator();
-        // while (rowIterator.hasNext()) {
-        // final Row row = rowIterator.next();
-        // if (row.getCell(0) == null) // To break the moment we are done with rows
-        // having data
-        // break;
-        // if (row.getCell(0).toString().equals("MSID")) // Skipping the first header
-        // row
-        // continue;
-        //
-        // final DataFormatter formatter = new DataFormatter(); // creating formatter
-        // using the default locale
-        // // final Cell cell = row.getCell(0);
-        // // final String j_username = formatter.formatCellValue(cell); // Returns the
-        // // formatted value of a cell as a
-        // // String regardless of the cell type.
-        //
-        // final AccoliteEmployee accoliteEmployee = new AccoliteEmployee(
-        // formatter.formatCellValue(row.getCell(5)), row.getCell(1).toString(),
-        // row.getCell(6).toString(),
-        // row.getCell(10).toString(), row.getCell(0).toString());
-        // System.out.println(accoliteEmployee.getEmployeeID());
-        // accoliteEmployeeRepository.save(accoliteEmployee);
-        // }
-        // myWorkBook.close();
-        // fis.close();
-        //
-        // } catch (final IOException e) {
-        // System.out.println("Error in reading file from system with error message " +
-        // e.getMessage());
-        // e.printStackTrace();
-        // }
->>>>>>> branch 'dev' of https://github.com/abhijitdaund-accolite/furlough.git
     }
 
     public void updateDB(final List<FurloughLog> logList, final Map<String, FurloughData> map) {
