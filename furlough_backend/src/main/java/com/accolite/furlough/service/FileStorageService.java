@@ -19,6 +19,7 @@ import java.util.Map.Entry;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,12 +42,10 @@ import com.accolite.furlough.repository.MSEmployeeRepository;
 import com.accolite.furlough.utils.Constants;
 import com.accolite.furlough.utils.FurloughRequestsIDTracker;
 
-// formatter.formatCellValue(row.getCell(5))
-// final DataFormatter formatter = new DataFormatter(); // creating formatter
-// using the default locale
-
 @Service
 public class FileStorageService {
+
+    final DataFormatter formatter = new DataFormatter();
 
     @Autowired
     private FurloughRequestsRepository furloughRequestsRepository;
@@ -67,7 +66,6 @@ public class FileStorageService {
             mapExcelToHashmap(finalString);
         } catch (final Exception e) {
             log.error("Failed to store the file. Error: " + e.getMessage());
-            // throw new RuntimeException("FAIL!");
         }
     }
 
@@ -86,13 +84,14 @@ public class FileStorageService {
                 final Row row = rowIterator.next();
                 if (row.getCell(0) == null) // To break the moment we are done with rows having data
                     break;
-                if (row.getCell(0).toString().equals("MSID")) // Skipping the first header row
+                if (formatter.formatCellValue(row.getCell(0)).equals("MSID")) // Skipping the first header row
                     continue;
                 final FurloughLog furloughLog = new FurloughLog();
-                final Date furloughDate = new SimpleDateFormat(Constants.DATE_FORMAT).parse(row.getCell(3).toString());
+                final Date furloughDate = new SimpleDateFormat(Constants.DATE_FORMAT)
+                        .parse(formatter.formatCellValue(row.getCell(3)));
 
-                furloughLog.setmSID((row.getCell(0).toString()));
-                furloughLog.setFurloughStatus(row.getCell(4).toString());
+                furloughLog.setmSID(formatter.formatCellValue((row.getCell(0))));
+                furloughLog.setFurloughStatus(formatter.formatCellValue(row.getCell(4)));
                 furloughLog.setFurloughDate(furloughDate);
                 furloughLog.setLogTime(new Date());
 
@@ -100,11 +99,10 @@ public class FileStorageService {
 
                 // If the employee has already been parsed in a previous row, we just update/add
                 // FurloughDate and Status
-                if (map.containsKey(row.getCell(0).toString())) {
-                    final FurloughData tempFurlough = map.get(row.getCell(0).toString());
-
+                if (map.containsKey(formatter.formatCellValue(row.getCell(0)))) {
+                    final FurloughData tempFurlough = map.get(formatter.formatCellValue(row.getCell(0)));
                     final Map<Date, String> dateMap = tempFurlough.getFurloughDates();
-                    dateMap.put(furloughDate, row.getCell(4).toString());
+                    dateMap.put(furloughDate, formatter.formatCellValue(row.getCell(4)));
                     tempFurlough.setFurloughDates(dateMap);
 
                     map.put(tempFurlough.getMSID(), tempFurlough);
@@ -114,17 +112,17 @@ public class FileStorageService {
                 else {
                     final FurloughData furlough = new FurloughData();
 
-                    furlough.setMSID(row.getCell(0).toString());
-                    furlough.setResourceName(row.getCell(1).toString());
-                    furlough.setVendorName(row.getCell(2).toString());
+                    furlough.setMSID(formatter.formatCellValue(row.getCell(0)));
+                    furlough.setResourceName(formatter.formatCellValue(row.getCell(1)));
+                    furlough.setVendorName(formatter.formatCellValue(row.getCell(2)));
 
                     final Map<Date, String> dateMap = new HashMap<Date, String>();
-                    dateMap.put(furloughDate, row.getCell(4).toString());
+                    dateMap.put(furloughDate, formatter.formatCellValue(row.getCell(4)));
                     furlough.setFurloughDates(dateMap);
 
-                    furlough.setDivision(row.getCell(5).toString());
-                    furlough.setLocation(row.getCell(6).toString());
-                    furlough.setComments(row.getCell(7).toString());
+                    furlough.setDivision(formatter.formatCellValue(row.getCell(5)));
+                    furlough.setLocation(formatter.formatCellValue(row.getCell(6)));
+                    furlough.setComments(formatter.formatCellValue(row.getCell(7)));
 
                     map.put(furlough.getMSID(), furlough);
                 }
@@ -165,10 +163,11 @@ public class FileStorageService {
                 // FurloughDate and Status
 
                 final FurloughLog furlough = new FurloughLog();
-                final Date furloughDate = new SimpleDateFormat(Constants.DATE_FORMAT).parse(row.getCell(3).toString());
+                final Date furloughDate = new SimpleDateFormat(Constants.DATE_FORMAT)
+                        .parse(formatter.formatCellValue(row.getCell(3)));
 
-                furlough.setmSID((row.getCell(0).toString()));
-                furlough.setFurloughStatus(row.getCell(4).toString());
+                furlough.setmSID((formatter.formatCellValue(row.getCell(0))));
+                furlough.setFurloughStatus(formatter.formatCellValue(row.getCell(4)));
                 furlough.setFurloughDate(furloughDate);
                 furlough.setLogTime(new Date());
 
@@ -233,15 +232,18 @@ public class FileStorageService {
             final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis);
             final HSSFSheet furloughSheet = myWorkBook.getSheetAt(0);
             final Iterator<Row> rowIterator = furloughSheet.iterator();
+
             while (rowIterator.hasNext()) {
                 final Row row = rowIterator.next();
                 if (row.getCell(0) == null) // To break the moment we are done with rows having data
                     break;
-                if (row.getCell(0).toString().equals("MSID")) // Skipping the first header row
+                if (formatter.formatCellValue(row.getCell(0)).equals("MSID")) // Skipping the first header row
                     continue;
-                final MSEmployee msEmployee = new MSEmployee(row.getCell(0).toString(), row.getCell(1).toString(),
-                        row.getCell(2).toString(), row.getCell(3).toString(), row.getCell(4).toString(),
-                        row.getCell(5).toString(), "");
+
+                final MSEmployee msEmployee = new MSEmployee(formatter.formatCellValue(row.getCell(0)),
+                        formatter.formatCellValue(row.getCell(1)), formatter.formatCellValue(row.getCell(2)),
+                        formatter.formatCellValue(row.getCell(3)), formatter.formatCellValue(row.getCell(4)),
+                        formatter.formatCellValue(row.getCell(5)), formatter.formatCellValue(row.getCell(6)));
                 msEmployeeRepository.save(msEmployee);
             }
             myWorkBook.close();
