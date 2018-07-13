@@ -11,20 +11,18 @@ public class MSEmployee {
 
     public MSEmployee() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    public MSEmployee(final String mSID, final String resourceName, final String vendorName, final String division,
-            final String officeLocation, final String accoliteEmployee, final String email, final String contact) {
+    public MSEmployee(final String mSID, final String accoliteEmployee, final String resourceName,
+            final String vendorName, final String division, final String officeLocation, final String email) {
         super();
         MSID = mSID;
+        this.accoliteEmployee = accoliteEmployee;
         this.resourceName = resourceName;
         this.vendorName = vendorName;
         this.division = division;
         this.officeLocation = officeLocation;
-        this.accoliteEmployee = accoliteEmployee;
         this.email = email;
-        this.contact = contact;
     }
 
     @Id
@@ -49,23 +47,12 @@ public class MSEmployee {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "contact")
-    private String contact;
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(final String email) {
         this.email = email;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(final String contact) {
-        this.contact = contact;
     }
 
     public String getResourceName() {
