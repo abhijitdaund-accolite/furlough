@@ -1,0 +1,73 @@
+<body class="sidebar-is-expanded">
+    <header class="l-header">
+      <div class="l-header__inner clearfix">
+        
+        
+        <div class="header-icons-group">
+          <div class="c-header-icon logout" (click)="logout()"> Logout&nbsp;<i class="fa fa-power-off"></i></div>
+        
+        </div>
+      </div>
+    </header>
+    <div class="l-sidebar">
+      <div class="logo">
+        <a href='/welcomePage'><div class="logo__txt">Furlough Management</div> </a>
+      </div>
+      <div class="l-sidebar__content">
+        <nav class="c-menu js-menu">
+          <ul class="u-list">
+                <a href='/uploadPage'><li class="c-menu__item has-submenu" data-toggle="tooltip" title="Proposals">
+              <div class="c-menu__item__inner"><i class="fa fa-file-text-o"></i>
+                <div class="c-menu-item__title"><span>Upload data</span></div>
+              </div>
+            </li></a>
+            
+            <a href='/usersPage'><li class="c-menu__item has-submenu" data-toggle="tooltip" title="Accounts">
+                <div class="c-menu__item__inner"><i class="fa fa-address-book-o"></i>
+                  <div class="c-menu-item__title"><span>Users</span></div>
+                </div>
+              </li></a>
+            
+            <a href='/logsPage'><li class="c-menu__item has-submenu" data-toggle="tooltip" title="History">
+              <div class="c-menu__item__inner"><i class="fa fa-history"></i>
+                <div class="c-menu-item__title"><span>Request Logs</span></div>
+              </div>
+            </li></a>
+            
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </body>
+  <main class="l-main">
+    <div style="position:absolute; left:550px; top:30px;"> 
+      <div class="content-wrapper content-wrapper--with-bg">
+          <h2> Upload your file here...</h2>
+          <br/>
+
+          <form id="file-upload-form" class="uploader" #yourForm="ngForm" (ngSubmit)="onSubmit()">  
+            
+            <label for="file-upload" id="file-drag">
+                <input id="file-upload" type="file" name="file" (change)="selectFile($event)"/>
+              <div id="start">
+                <i class="fa fa-download" aria-hidden="true"></i>
+                <div *ngIf="!selectedFiles">No file selected ! </div>
+                <div *ngIf="selectedFiles">Press upload button ! </div>
+                <br/>
+                <span id="file-upload-btn" class="btn btn-primary">Select a file</span>
+              </div>  
+            </label>
+          </form>
+          <button [disabled]="!selectedFiles" (click)="upload()" class="button button2">Upload</button>
+          
+          <!-- <div style="text-align:center">
+            <label>
+             <input type="file" (change)="selectFile($event)" name="file">
+             </label>
+             <button [disabled]="!selectedFiles"
+           (click)="upload()">Upload</button>
+            </div> -->
+
+          </div>
+        </div>
+    </main>
