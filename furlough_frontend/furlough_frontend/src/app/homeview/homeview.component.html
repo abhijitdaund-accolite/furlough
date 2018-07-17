@@ -1,0 +1,89 @@
+<body class="sidebar-is-expanded">
+  <header class="l-header">
+    <div class="l-header__inner clearfix" >
+      <h2>&nbsp; &nbsp; Give the input to check Furlough data </h2>
+      <div class="header-icons-group">
+        <div class="c-header-icon logout" (click)="logout()">Logout&nbsp;&nbsp;<i class="fa fa-power-off"></i></div>
+      </div>
+    
+  </div>
+  </header>
+  <div class="l-sidebar">
+    <div class="logo">
+      <a href='/welcomePage'><div class="logo__txt">Furlough Management</div> </a>
+    </div>
+    <div class="l-sidebar__content">
+      <nav class="c-menu js-menu">
+        <ul class="u-list">
+              <a href='/uploadPage'><li class="c-menu__item has-submenu" data-toggle="tooltip" title="Proposals">
+            <div class="c-menu__item__inner"><i class="fa fa-file-text-o"></i>
+              <div class="c-menu-item__title"><span>Upload data</span></div>
+            </div>
+          </li></a>
+          
+          <a href='/usersPage'><li class="c-menu__item has-submenu" data-toggle="tooltip" title="Accounts">
+                  <div class="c-menu__item__inner"><i class="fa fa-address-book-o"></i>
+                    <div class="c-menu-item__title"><span>Users</span></div>
+                  </div>
+                </li></a>
+          
+          <a href='/logsPage'><li class="c-menu__item has-submenu" data-toggle="tooltip" title="History">
+            <div class="c-menu__item__inner"><i class="fa fa-history"></i>
+              <div class="c-menu-item__title"><span>Request Logs</span></div>
+            </div>
+          </li></a>
+          
+        </ul>
+      </nav>
+    </div>
+  </div>
+</body>
+<main class="l-main">
+  <div style="position:absolute; left:250px; top:80px;"> 
+
+    <div >
+      <input type="date"  [(ngModel)]="fromDate"/>
+      <input type="date"  [(ngModel)]="toDate"/>
+      <button (click)="prepareDateHeader()">FETCH</button>
+    </div>
+    
+    <div class="table-container">
+    <table class="main-table" *ngIf="DATEVIEW">
+      <thead>
+        <tr>
+          <td *ngIf="!tablePristine">MSID</td>
+          <td *ngIf="!tablePristine">NAME</td>
+          <td *ngFor="let header of dateHeader" (click)="switchView(header)">{{header}}</td>
+        </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let emps of furloughData">
+        <td>{{emps.MSID}}</td>
+        <td>{{emps.NAME}}</td>
+        <td *ngFor="let dates of emps.POLBUCKETS">{{dates.P}}|{{dates.O}}</td>
+      </tr>
+      </tbody>
+    </table>
+    
+    
+    <table class="main-table" *ngIf="MONTHVIEW">
+      <thead>
+      <tr>
+        <td *ngIf="!tablePristine">MSID</td>
+        <td *ngIf="!tablePristine">NAME</td>
+        <td *ngFor="let day of formattedDayHeader">{{day}}</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let emps of furloughDateReport">
+        <td>{{emps.MSID}}</td>
+        <td>{{emps.NAME}}</td>
+        <td *ngFor="let dates of emps.BUCKET">{{dates}}</td>
+      </tr>
+      </tbody>
+    </table>
+    
+    </div>
+
+  </div>
+</main>
