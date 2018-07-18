@@ -10,8 +10,7 @@
 							<div class="cols-sm-10">
 								<div class="input-group">
 									<span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
-                  <input type="text" class="form-control" name="fname" id="fname"  placeholder="First Name"/>
-                  <input type="text" class="form-control" name="lname" id="lname"  placeholder="Last Name"/>
+                  <input type="text" class="form-control" name="resourceName" id="resourceName"  placeholder="Name" required [(ngModel)]="employeeInput.resourceName"/>
 								</div>
 							</div>
 						</div>
@@ -21,7 +20,7 @@
 							<div class="cols-sm-10">
 								<div class="input-group">
 									<span class="input-group-addon"><i class="fa fa-id-card fa" aria-hidden="true"></i></span>
-									<input type="text" class="form-control" name="accoId" id="accoId"  placeholder="Enter Accolite ID"/>
+									<input type="text" class="form-control" name="accoId" id="accoId"  placeholder="Enter Accolite ID" required [(ngModel)]="employeeInput.accoliteEmployee" />
 								</div>
 							</div>
 						</div>
@@ -31,17 +30,7 @@
 							<div class="cols-sm-10">
 								<div class="input-group">
 									<span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
-									<input type="text" class="form-control" name="email" id="email"  placeholder="Enter e-mail"/>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label for="password" class="cols-sm-2 control-label">Contact</label>
-							<div class="cols-sm-10">
-								<div class="input-group">
-									<span class="input-group-addon"><i class="fa fa-phone fa-lg" aria-hidden="true"></i></span>
-									<input type="text" class="form-control" name="contact" id="contact"  placeholder="Enter contact"/>
+									<input type="text" class="form-control" name="email" id="email"  placeholder="Enter e-mail" required [(ngModel)]="employeeInput.email"/>
 								</div>
 							</div>
 						</div>
@@ -51,7 +40,7 @@
 							<div class="cols-sm-10">
 								<div class="input-group">
 									<span class="input-group-addon"><i class="fa fa-id-card fa-lg" aria-hidden="true"></i></span>
-									<input type="text" class="form-control" name="msId" id="msId"  placeholder="Enter MS ID"/>
+									<input type="text" class="form-control" name="mSID" id="mSID"  placeholder="Enter MS ID" required [(ngModel)]="employeeInput.mSID"/>
 								</div>
 							</div>
             </div>
@@ -61,7 +50,7 @@
                 <div class="cols-sm-10">
                   <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-male fa-lg" aria-hidden="true"></i></span>
-                    <input type="text" class="form-control" name="vendorName" id="vendorName"  placeholder="Enter vendor name"/>
+                    <input type="text" class="form-control" name="vendorName" id="vendorName"  placeholder="Enter vendor name" required [(ngModel)]="employeeInput.vendorName"/>
                   </div>
                 </div>
               </div>
@@ -71,7 +60,7 @@
                   <div class="cols-sm-10">
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-briefcase fa-lg" aria-hidden="true"></i></span>
-                      <input type="text" class="form-control" name="division" id="division"  placeholder="Enter division"/>
+                      <input type="text" class="form-control" name="division" id="division"  placeholder="Enter division" required [(ngModel)]="employeeInput.division"/>
                     </div>
                   </div>
                 </div>
@@ -81,13 +70,13 @@
                     <div class="cols-sm-10">
                       <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-building fa-lg" aria-hidden="true"></i></span>
-                        <input type="text" class="form-control" name="officeLocation" id="officeLocation"  placeholder="Enter office location"/>
+                        <input type="text" class="form-control" name="officeLocation" id="officeLocation"  placeholder="Enter office location" required [(ngModel)]="employeeInput.officeLocation"/>
                       </div>
                     </div>
                   </div>
 
 						<div class="form-group ">
-							<a href='/usersPage' type="button" id="button" class="btn btn-primary btn-lg btn-block login-button">Register</a>
+							<button (click)='onClick()' id="button" class="btn btn-primary btn-lg btn-block login-button">Register</button>
 						</div>
 						
 					</form>
