@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
 import {RequestOptions, Request, RequestMethod} from '@angular/http';
 import { HttpClient } from '@angular/common/http';
+import { Constants } from '../constants';
 
 // interface employeeInput {
 //   mSID: string;
@@ -35,9 +36,9 @@ export class UserComponent implements OnInit {
     console.log("=============================================");
     console.log(this.employeeInput);
     console.log("=============================================");
-    return this.http.post('http://10.4.15.27:8080/furlough/ms_employees', this.employeeInput)
+    this.http.post(Constants.baseUrl+'/ms_employees', this.employeeInput)
       .subscribe ( (data) => console.log(data) );
-    // this.router.navigate(['/usersPage']);
+    this.router.navigate(['/usersPage']);
   }
 
 }
