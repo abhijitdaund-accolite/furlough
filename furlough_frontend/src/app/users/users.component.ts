@@ -6,13 +6,6 @@ import { FurloughService} from '../furlough.service';
 import { DataService} from '../data.service';
 import { Constants } from '../constants';
 
-interface msUser {
-  resourceName: string;
-  vendorName: string;
-  division: string;
-  officeLocation: string;
-  msid: string;
-}
 
 @Component({
   selector: 'app-users',
