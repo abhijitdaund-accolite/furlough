@@ -1,9 +1,9 @@
 package com.accolite.furlough.rest;
 /*
- * @author = guru shankar accepts cross origin from localhost:4200
+ * accepts cross origin from localhost:4200
  * @RequestParam should be similar as that of input tag Validations done 1.
  * Check for file type extensions 2. Upload only .xls Upload is done by file
- * storage service reviewed by Vignesh.B
+ * storage service
  */
 
 import java.io.File;
@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -37,7 +39,8 @@ public class FileUploadController {
     FileStorageService filestorageService;
 
     List<String> files = new ArrayList<String>();
-
+    private final static Logger logger = LoggerFactory.getLogger(FileUploadController.class);
+    
     @PostMapping("/post")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") final MultipartFile file) {
         String message = "";
@@ -50,15 +53,18 @@ public class FileUploadController {
             if (extension.equals("xls")) {
                 filestorageService.store(file);
                 message = "You successfully uploaded " + file.getOriginalFilename() + "!";
+                logger.info(message);
                 return ResponseEntity.status(HttpStatus.OK).body(message);
             } else {
                 message = "wrong file type " + file.getOriginalFilename() + "!";
+                logger.error(file.getOriginalFilename()+" is not an xls file");
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
             }
         }
 
         catch (final Exception e) {
             message = "FAIL to upload " + file.getOriginalFilename() + "!";
+            logger.error("Failed to upload "+file.getOriginalFilename()+" error :"+e.getMessage());
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
         }
     }

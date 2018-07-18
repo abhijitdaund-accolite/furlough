@@ -16,7 +16,7 @@ import com.accolite.furlough.service.FileStorageService;
 
 @RestController
 public class MSEmployeeController {
-    final String location = "C:\\Users\\Raunak.Maheshwari\\Documents\\hrdata.xls";
+    final String location = "C:\\Users\\Accolite\\Downloads\\hrdata.xls";
 
     @Autowired
     private MSEmployeeRepository msEmployeeRepository;
@@ -43,7 +43,7 @@ public class MSEmployeeController {
         return msEmployeeRepository.findById(msid).get();
     }
 
-    @PostMapping("/ms_employee")
+    @PostMapping("/ms_employees")
     @ResponseBody
     public MSEmployee postEmployee(@RequestBody final MSEmployee msEmployee) {
         return msEmployeeRepository.save(msEmployee);
