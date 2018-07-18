@@ -13,21 +13,9 @@ public class MSEmployee {
         super();
     }
 
-    public MSEmployee(final String mSID, final String accoliteEmployee, final String division, final String email,
-            final String officeLocation, final String resourceName, final String vendorName) {
-        super();
-        MSID = mSID;
-        this.accoliteEmployee = accoliteEmployee;
-        this.resourceName = resourceName;
-        this.vendorName = vendorName;
-        this.division = division;
-        this.officeLocation = officeLocation;
-        this.email = email;
-    }
-
     @Id
-    @Column(name = "MSID")
-    private String MSID;
+    @Column(name = "mSID")
+    private String mSID;
 
     @Column(name = "resourceName")
     private String resourceName;
@@ -87,12 +75,24 @@ public class MSEmployee {
         this.officeLocation = officeLocation;
     }
 
-    public String getMSID() {
-        return MSID;
+    public String getmSID() {
+        return mSID;
     }
 
-    public void setMSID(final String mSID) {
-        MSID = mSID;
+    public void setmSID(final String mSID) {
+        this.mSID = mSID;
+    }
+
+    public MSEmployee(final String mSID, final String resourceName, final String vendorName, final String division,
+            final String officeLocation, final String accoliteEmployee, final String email) {
+        super();
+        this.mSID = mSID;
+        this.resourceName = resourceName;
+        this.vendorName = vendorName;
+        this.division = division;
+        this.officeLocation = officeLocation;
+        this.accoliteEmployee = accoliteEmployee;
+        this.email = email;
     }
 
     public String getAccoliteEmployee() {
