@@ -83,8 +83,8 @@ public class MSEmployee {
         this.mSID = mSID;
     }
 
-    public MSEmployee(final String mSID, final String resourceName, final String vendorName, final String division,
-            final String officeLocation, final String accoliteEmployee, final String email) {
+    public MSEmployee(final String mSID, final String accoliteEmployee, final String division, final String email,
+            final String officeLocation, final String resourceName, final String vendorName) {
         super();
         this.mSID = mSID;
         this.resourceName = resourceName;
