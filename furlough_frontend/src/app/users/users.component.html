@@ -58,7 +58,7 @@
                     <li *ngFor="let userComponent of users |filter:term"
                       [class.selected]="userComponent === selectedUser"
                       (click)="onSelect(userComponent)">
-                      {{userComponent.msid}} &nbsp;&nbsp;&nbsp;&nbsp;  {{userComponent.resourceName}}
+                      {{userComponent.mSID}} &nbsp;&nbsp;&nbsp;&nbsp;  {{userComponent.resourceName}}
                     </li>
                   </ul>
                 </nav>
@@ -68,12 +68,9 @@
                 <div *ngIf="selectedUser">
                 
                 <h2>Details of {{selectedUser.resourceName}}</h2>
-                <div><label>ID: </label>&nbsp; {{selectedUser.msid}}</div>
+                <div><label>ID: </label>&nbsp; {{selectedUser.mSID}}</div>
                 <div>
                     <label>Name: </label>&nbsp; {{selectedUser.resourceName}}
-                </div>
-                <div>
-                    <label>Vendor Name: </label>&nbsp; {{selectedUser.vendorName}}
                 </div>
                 <div>
                     <label>Division: </label>&nbsp; {{selectedUser.division}}

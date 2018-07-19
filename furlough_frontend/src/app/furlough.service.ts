@@ -12,13 +12,10 @@ export class FurloughService {
   private msUserUrl = Constants.baseUrl + '/ms_employees' ; 
   private requestsUrl: string = Constants.baseUrl + '/requests';
 
-
-
   constructor(private http: HttpClient) { }
   getUserDetails() {
     return this.http.get(this.msUserUrl);
   }
-
 
   getCompleteLogs(){
     return this.http.get(this.requestsUrl);

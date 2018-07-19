@@ -5,16 +5,6 @@ import {RequestOptions, Request, RequestMethod} from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import { Constants } from '../constants';
 
-// interface employeeInput {
-//   mSID: string;
-//   accoliteEmployee: string;
-//   resourceName: string;
-//   vendorName: string;
-//   division: string;
-//   officeLocation: string;
-//   email: string;
-// }
-
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -23,22 +13,21 @@ import { Constants } from '../constants';
 export class UserComponent implements OnInit {
 
   constructor(private router: Router,private http: HttpClient) { }
-
+  check;
   employeeInput = {'mSID':"" , 'accoliteEmployee':"", 'resourceName':"" , 'vendorName':"",'division':"" , 'officeLocation':"" , 'email':""};
 
   ngOnInit() {
+    this.check=0;
   }
 
   onClick() {
 
-    // let headers = new Headers({ 'Content-Type': 'application/json' });
-    // let options = new RequestOptions({ headers: headers });
     console.log("=============================================");
     console.log(this.employeeInput);
     console.log("=============================================");
     this.http.post(Constants.baseUrl+'/ms_employees', this.employeeInput)
       .subscribe ( (data) => console.log(data) );
-    this.router.navigate(['/usersPage']);
+    this.check=1;
   }
 
 }
