@@ -20,7 +20,15 @@ public class SendMail {
     private final String toEmail;
     private final String mailContent;
     private final String mailSubject;
-    private final static Logger logger= LoggerFactory.getLogger(SendMail.class);
+    private final static Logger logger = LoggerFactory.getLogger(SendMail.class);
+
+    public SendMail(final String toEmail, final String mailContent) {
+        this.fromEmail = "raunak.maheshwari@accoliteindia.com";
+        this.toEmail = toEmail;
+        this.mailContent = mailContent;
+        this.mailSubject = "Furlough Leaves Standard Subject Text";
+    }
+
     public SendMail(final String fromEmail, final String toEmail, final String mailSubject, final String mailContent) {
         this.fromEmail = fromEmail;
         this.toEmail = toEmail;
@@ -47,8 +55,14 @@ public class SendMail {
             System.out.println(response.getBody());
             System.out.println(response.getHeaders());
         } catch (final IOException ex) {
-           logger.error("Failed with error message : "+ex.getMessage());
-        	// throw ex;
+            logger.error("Failed with error message : " + ex.getMessage());
+            // throw ex;
         }
     }
+
+    // public static void main(final String[] args) throws IOException {
+    // final SendMail m = new SendMail("raunak.maheshwari@accoliteindia.com",
+    // "finalString");
+    // m.sendMail();
+    // }
 }

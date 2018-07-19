@@ -35,6 +35,7 @@ import com.accolite.furlough.entity.FurloughData;
 import com.accolite.furlough.entity.FurloughLog;
 import com.accolite.furlough.entity.FurloughRequests;
 import com.accolite.furlough.entity.MSEmployee;
+import com.accolite.furlough.parserinput.SendJavaMail;
 // import com.accolite.furlough.repository.AccoliteEmployeeRepository;
 import com.accolite.furlough.repository.FurloughLogRepository;
 import com.accolite.furlough.repository.FurloughRequestsRepository;
@@ -78,7 +79,6 @@ public class FileStorageService {
             final FileInputStream fis = new FileInputStream(inputExcel);
             final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis);
             final HSSFSheet furloughSheet = myWorkBook.getSheetAt(0);
-
             final Iterator<Row> rowIterator = furloughSheet.iterator();
             while (rowIterator.hasNext()) {
                 final Row row = rowIterator.next();
@@ -132,6 +132,7 @@ public class FileStorageService {
             fis.close();
 
             updateDB(listFurloughLog, map);
+            sendMails(map);
             return map;
 
         } catch (final IOException e) {
@@ -142,49 +143,39 @@ public class FileStorageService {
         return null;
     }
 
-    public List<FurloughLog> mapExcelToList(final String location) throws InterruptedException {
+    private void sendMails(final Map<String, FurloughData> map) throws IOException {
 
-        try {
-            final List<FurloughLog> listFurloughLog = new ArrayList<FurloughLog>();
-            final File inputExcel = new File(Constants.ROOT_PATH + location);
-            final FileInputStream fis = new FileInputStream(inputExcel);
-            final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis);
-            final HSSFSheet furloughSheet = myWorkBook.getSheetAt(0);
+        final List<String> dateList = new ArrayList<String>();
 
-            final Iterator<Row> rowIterator = furloughSheet.iterator();
-            while (rowIterator.hasNext()) {
-                final Row row = rowIterator.next();
-                if (row.getCell(0) == null) // To break the moment we are done with rows having data
-                    break;
-                if (row.getCell(0).toString().equals("MSID")) // Skipping the first header row
-                    continue;
+        for (final Entry<String, FurloughData> entry : map.entrySet()) {
 
-                // If the employee has already been parsed in a previous row, we just update/add
-                // FurloughDate and Status
+            String finalString = "Dear " + entry.getValue().getResourceName() + "\n\n";
+            final String mailStart = "This is start of mail \n\n";
+            finalString = finalString + mailStart;
+            final String mailEnd = "\nThis is end of mail";
 
-                final FurloughLog furlough = new FurloughLog();
-                final Date furloughDate = new SimpleDateFormat(Constants.DATE_FORMAT)
-                        .parse(formatter.formatCellValue(row.getCell(3)));
+            String email = "raunak.maheshwari@accoliteindia.com";
+            if (msEmployeeRepository.findById(entry.getValue().getMSID()).isPresent())
+                email = msEmployeeRepository.findById(entry.getValue().getMSID()).get().getEmail();
+            if (email.equals("N/A"))
+                email = "raunak.maheshwari@accoliteindia.com";
 
-                furlough.setmSID((formatter.formatCellValue(row.getCell(0))));
-                furlough.setFurloughStatus(formatter.formatCellValue(row.getCell(4)));
-                furlough.setFurloughDate(furloughDate);
-                furlough.setLogTime(new Date());
-
-                listFurloughLog.add(furlough);
-
+            final Map<Date, String> requestDates = entry.getValue().getFurloughDates();
+            dateList.clear();
+            for (final Entry<Date, String> dateEntry : requestDates.entrySet()) {
+                if (dateEntry.getValue().equals("PLANNED")) {
+                    dateList.add(dateEntry.getKey().toString());
+                }
             }
-            myWorkBook.close();
+            final Iterator<String> it = dateList.iterator();
+            while (it.hasNext())
+                finalString = finalString + it.next() + "\n";
+            finalString = finalString + mailEnd;
+            System.out.println(finalString + "\n\n");
 
-            log.info("Object is : " + furloughRequestsRepository);
-            return listFurloughLog;
-
-        } catch (final IOException e) {
-            log.error("Error in reading file from system with error message " + e.getMessage());
-        } catch (final ParseException e) {
-            log.error("Error in parsing date with error message " + e.getMessage());
+            final SendJavaMail m = new SendJavaMail(email, finalString);
+            m.sendJavaMail();
         }
-        return null;
     }
 
     public Resource loadFile(final String filename) {

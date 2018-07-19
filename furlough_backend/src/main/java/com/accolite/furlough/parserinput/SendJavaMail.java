@@ -1,5 +1,6 @@
 package com.accolite.furlough.parserinput;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -21,6 +22,7 @@ public class SendJavaMail {
     private final String mailSubject;
     private final String password;
     private final static Logger logger = LoggerFactory.getLogger(SendJavaMail.class);
+
     public SendJavaMail(final String password, final String fromEmail, final String toEmail, final String mailSubject,
             final String mailContent) {
         this.password = password;
@@ -28,6 +30,14 @@ public class SendJavaMail {
         this.toEmail = toEmail;
         this.mailContent = mailContent;
         this.mailSubject = mailSubject;
+    }
+
+    public SendJavaMail(final String toEmail, final String mailContent) {
+        this.password = "Redhat192**";
+        this.fromEmail = "raunak.maheshwari@accoliteindia.com";
+        this.toEmail = toEmail;
+        this.mailContent = mailContent;
+        this.mailSubject = "Furlough Leaves Standard Subject Text";
     }
 
     public void sendJavaMail() {
@@ -54,12 +64,17 @@ public class SendJavaMail {
             message.setText(mailContent);
 
             Transport.send(message);
-            logger.info("Email sent successfully");
-          //  System.out.println("Sent the email Successfully!");
+            logger.info("Email sent successfully to : " + toEmail);
+            // System.out.println("Sent the email Successfully!");
 
         } catch (final MessagingException e) {
-            logger.error("Failed to send with error message : "+e.getMessage());
-        	//throw new RuntimeException(e);
+            logger.error("Failed to send with error message : " + e.getMessage());
+            // throw new RuntimeException(e);
         }
+    }
+
+    public static void main(final String[] args) throws IOException {
+        final SendJavaMail m = new SendJavaMail("raunak.maheshwari@accoliteindia.com", "finalString");
+        m.sendJavaMail();
     }
 }
