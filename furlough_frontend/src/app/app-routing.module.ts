@@ -8,13 +8,14 @@ import { LogsComponent } from './logs/logs.component';
 import { UsersComponent } from './users/users.component';
 import { UserComponent } from './user/user.component';
 import { HomeviewComponent } from './homeview/homeview.component';
+import {ReportviewComponent} from './reportview/reportview.component';
 
 const routes: Routes = [
   { path: 'loginPage', component: LoginComponent },
   { path: '', component: LoginComponent },
   { path: 'welcomePage', component: DashboardComponent },
   { path: 'uploadPage', component: UploadComponent },
-  { path: 'logsPage', component: HomeviewComponent },
+  { path: 'logsPage', component: ReportviewComponent },
   { path: 'usersPage', component: UsersComponent },
   { path: 'newUserPage', component: UserComponent },
 ];

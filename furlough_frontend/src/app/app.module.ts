@@ -12,27 +12,38 @@ import { UserComponent } from './user/user.component';
 import { LogsComponent } from './logs/logs.component';
 import { UploadComponent } from './upload/upload.component';
 import { FurloughService } from './furlough.service';
-import { HomeviewComponent } from './homeview/homeview.component';
+
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import {ReportviewComponent} from './reportview/reportview.component';
+import {CountOverlappedPipe, CountPlannedPipe} from './countPlanned.pipe';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatNativeDateModule, MatSelectModule} from '@angular/material';
+import {HomeviewComponent} from './homeview/homeview.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     DashboardComponent,
+    HomeviewComponent,
     ReportsComponent,
     UsersComponent,
     UserComponent,
     LogsComponent,
     UploadComponent,
-    HomeviewComponent
+    ReportviewComponent,
+    CountPlannedPipe,
+    CountOverlappedPipe
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    BrowserAnimationsModule,
+    MatSelectModule,
+    MatNativeDateModule
   ],
   providers: [FurloughService],
   bootstrap: [AppComponent]
