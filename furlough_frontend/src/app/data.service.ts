@@ -18,10 +18,22 @@ export class DataService {
     return this.http.get(this.serverUri);
   }
 
-  public getData(fromDate,toDate) {
-    return this.http.get(Constants.baseUrl+'/requests?from='+fromDate+'?to='+toDate);
+  public getData(startDate, endDate) {
+    startDate = this.reformatDate(startDate);
+    endDate = this.reformatDate(endDate);
+    return this.http.get(Constants.baseUrl + '/requests?from=' + startDate + '+&to=' + endDate );
   }
-  
+
+  reformatDate(dateObj): string {
+    const dYear = dateObj.getFullYear();
+    let dMonth = dateObj.getMonth() + 1;
+    let dDate =  dateObj.getDate();
+    if (dMonth < 10)
+      dMonth = '0' + dMonth;
+    if (dDate < 10)
+      dDate = '0' + dDate;
+    return (dYear + '-' + dMonth + '-' + dDate).toString();
+  }
   logout() {
     localStorage.setItem('key','0');
     this.router.navigate(['/loginPage']);
