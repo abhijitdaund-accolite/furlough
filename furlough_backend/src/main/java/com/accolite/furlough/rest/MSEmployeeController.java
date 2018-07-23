@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.accolite.furlough.entity.MSEmployee;
 import com.accolite.furlough.repository.MSEmployeeRepository;
-import com.accolite.furlough.service.FileStorageService;
+import com.accolite.furlough.service.MSEmployeePopulatorService;
 
 @RestController
 public class MSEmployeeController {
@@ -27,11 +27,11 @@ public class MSEmployeeController {
     private MSEmployeeRepository msEmployeeRepository;
 
     @Autowired
-    private FileStorageService filestorageService;
+    private MSEmployeePopulatorService populator;
 
     @RequestMapping(value = "/ms/populate")
     public String populateMSEmployees() {
-        filestorageService.populateMSEmployees(location);
+        populator.populateMSEmployees(location);
         return "Populated MS Employees successfully!";
     }
 

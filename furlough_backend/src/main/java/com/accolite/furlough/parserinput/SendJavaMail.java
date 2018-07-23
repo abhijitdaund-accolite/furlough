@@ -33,8 +33,8 @@ public class SendJavaMail {
     }
 
     public SendJavaMail(final String toEmail, final String mailContent) {
-        this.password = "Redhat192**";
-        this.fromEmail = "raunak.maheshwari@accoliteindia.com";
+        this.password = "Superstar!2";
+        this.fromEmail = "vignesh.b@accoliteindia.com";
         this.toEmail = toEmail;
         this.mailContent = mailContent;
         this.mailSubject = "Furlough Leaves Standard Subject Text";
@@ -47,6 +47,7 @@ public class SendJavaMail {
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         final Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             @Override
