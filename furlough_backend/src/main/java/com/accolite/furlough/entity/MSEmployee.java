@@ -20,12 +20,6 @@ public class MSEmployee {
     @Column(name = "resourceName")
     private String resourceName;
 
-    @Column(name = "vendorName")
-    private String vendorName;
-
-    @Column(name = "division")
-    private String division;
-
     @Column(name = "officeLocation")
     private String officeLocation;
 
@@ -51,22 +45,6 @@ public class MSEmployee {
         this.resourceName = resourceName;
     }
 
-    public String getVendorName() {
-        return vendorName;
-    }
-
-    public void setVendorName(final String vendorName) {
-        this.vendorName = vendorName;
-    }
-
-    public String getDivision() {
-        return division;
-    }
-
-    public void setDivision(final String division) {
-        this.division = division;
-    }
-
     public String getOfficeLocation() {
         return officeLocation;
     }
@@ -83,13 +61,11 @@ public class MSEmployee {
         this.mSID = mSID;
     }
 
-    public MSEmployee(final String mSID, final String accoliteEmployee, final String division, final String email,
-            final String officeLocation, final String resourceName, final String vendorName) {
+    public MSEmployee(final String mSID, final String accoliteEmployee, final String email, final String officeLocation,
+            final String resourceName) {
         super();
         this.mSID = mSID;
         this.resourceName = resourceName;
-        this.vendorName = vendorName;
-        this.division = division;
         this.officeLocation = officeLocation;
         this.accoliteEmployee = accoliteEmployee;
         this.email = email;

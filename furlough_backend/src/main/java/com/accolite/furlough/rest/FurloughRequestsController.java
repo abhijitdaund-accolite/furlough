@@ -87,7 +87,7 @@ public class FurloughRequestsController {
             if (msEmployeeRepository.existsById(MSID)) {
                 final MSEmployee emp = this.msEmployeeRepository.findById(MSID).get();
                 final FurloughReport report = new FurloughReport(emp.getmSID(), datesMap.get(MSID),
-                        emp.getResourceName(), emp.getVendorName()
+                        emp.getResourceName()
 
                 );
 
