@@ -21,13 +21,17 @@ public class AdminController {
     @PostMapping("/login")
     @ResponseBody
     public AuthenticateResponse authenticate(@Valid @RequestBody final Admin user) {
-        return this.adminRolesRepository.findById(user.getEmail()).map(admin -> {
+
+        if (adminRolesRepository.existsById(user.getEmail())) {
+            final Admin admin = adminRolesRepository.findById(user.getEmail()).get();
             if (admin.getPassword().equals(user.getPassword())) {
                 return new AuthenticateResponse(admin, true);
             } else {
-                return new AuthenticateResponse(null, false);
+                return new AuthenticateResponse(admin, false);
             }
-        }).orElseThrow(null);
+        } else {
+            return new AuthenticateResponse(null, false);
+        }
 
     }
 }
