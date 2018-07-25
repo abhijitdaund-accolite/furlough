@@ -4,9 +4,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.accolite.furlough.dto.AuthenticateResponse;
@@ -19,7 +18,7 @@ public class AdminController {
     @Autowired
     private AdminRolesRepository adminRolesRepository;
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping("/login")
     @ResponseBody
     public AuthenticateResponse authenticate(@Valid @RequestBody final Admin user) {
         return this.adminRolesRepository.findById(user.getEmail()).map(admin -> {
