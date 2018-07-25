@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.accolite.furlough.utils.Encryption;
+import com.accolite.furlough.utils.EmailUtil;
 
 @RestController
 public class ResponseController {
@@ -22,11 +22,11 @@ public class ResponseController {
         if (msid == null || token == null) // Error Handling to be done
             return "The link has expired. Please contact the product owner for help";
 
-        final String decodedDates = Encryption.base64Decode(token);
-        final String decodedMSID = Encryption.base64Decode(msid);
-        final Map<String, List<String>> map = Encryption.getMailResponseMap(decodedMSID, decodedDates);
+        final String decodedDates = EmailUtil.base64Decode(token);
+        final String decodedMSID = EmailUtil.base64Decode(msid);
+        final Map<String, List<String>> map = EmailUtil.getMailResponseMap(decodedMSID, decodedDates);
         // Function which will use the above map!
-        return "Thank you for confirming your furlough dates";
+        return map.toString();
     }
 
 }

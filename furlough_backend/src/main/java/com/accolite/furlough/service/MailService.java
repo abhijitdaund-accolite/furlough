@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import com.accolite.furlough.entity.FurloughData;
 import com.accolite.furlough.parserinput.SendJavaMail;
 import com.accolite.furlough.repository.MSEmployeeRepository;
+import com.accolite.furlough.utils.Constants;
+import com.accolite.furlough.utils.EmailUtil;
 
 @Service
 public class MailService {
@@ -30,7 +32,7 @@ public class MailService {
             String finalString = "Dear " + entry.getValue().getResourceName() + "\n\n";
             final String mailStart = "This is start of mail \n\n";
             finalString = finalString + mailStart;
-            final String mailEnd = "\nThis is end of mail";
+            final String mailEnd = "\nThis is end of mail\n";
 
             String email = "raunak.maheshwari@accoliteindia.com";
             if (msEmployeeRepository.findById(entry.getValue().getMSID()).isPresent())
@@ -39,18 +41,26 @@ public class MailService {
                 email = "raunak.maheshwari@accoliteindia.com";
             email = "vignesh.b@accoliteindia.com";
 
+            String dateString = "";
             final Map<Date, String> requestDates = entry.getValue().getFurloughDates();
             dateList.clear();
             for (final Entry<Date, String> dateEntry : requestDates.entrySet()) {
                 if (dateEntry.getValue().equals("PLANNED")) {
+                    dateString += dateEntry.getKey().toString() + "!";
                     dateList.add(dateEntry.getKey().toString());
                 }
             }
             final Iterator<String> it = dateList.iterator();
             while (it.hasNext())
                 finalString = finalString + it.next() + "\n";
-            finalString = finalString + mailEnd;
-            System.out.println(finalString + "\n\n");
+
+            String confirmLink = "Please click on the following link to confirm the above.";
+            confirmLink += "\n\n" + Constants.HOST_URL + "verify/?msid="
+                    + EmailUtil.base64Encode(entry.getValue().getMSID());
+            confirmLink += "&token=" + EmailUtil.base64Encode(dateString);
+            finalString = finalString + "\n" + confirmLink + mailEnd;
+
+            System.out.println(finalString);
 
             final SendJavaMail m = new SendJavaMail(email, finalString);
             m.sendJavaMail();
