@@ -7,6 +7,8 @@ package com.accolite.furlough.rest;
  */
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import com.accolite.furlough.service.FileStorageService;
+import com.accolite.furlough.utils.Constants;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @Controller
@@ -40,7 +43,7 @@ public class FileUploadController {
 
     List<String> files = new ArrayList<String>();
     private final static Logger logger = LoggerFactory.getLogger(FileUploadController.class);
-    
+
     @PostMapping("/post")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") final MultipartFile file) {
         String message = "";
@@ -51,20 +54,29 @@ public class FileUploadController {
             final int dotIndex = fileName.lastIndexOf('.');
             final String extension = (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
             if (extension.equals("xls")) {
+                final Path rootLocation = Paths.get(Constants.ROOT_PATH + Constants.UPLOAD_DIR);
+                final File toFile = new File(rootLocation.toString() + Constants.URL_SEP + file.getOriginalFilename());
+                if (toFile.exists()) {
+                    message = "File " + file.getOriginalFilename() + " is already uploaded to the server";
+                    logger.error(message);
+                    return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+
+                }
                 filestorageService.store(file);
                 message = "You successfully uploaded " + file.getOriginalFilename() + "!";
                 logger.info(message);
                 return ResponseEntity.status(HttpStatus.OK).body(message);
             } else {
                 message = "wrong file type " + file.getOriginalFilename() + "!";
-                logger.error(file.getOriginalFilename()+" is not an xls file");
+                logger.error(file.getOriginalFilename() + " is not an xls file");
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
             }
+
         }
 
         catch (final Exception e) {
             message = "FAIL to upload " + file.getOriginalFilename() + "!";
-            logger.error("Failed to upload "+file.getOriginalFilename()+" error :"+e.getMessage());
+            logger.error("Failed to upload " + file.getOriginalFilename() + " error :" + e.getMessage());
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
         }
     }
