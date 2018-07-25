@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.accolite.furlough.entity.MSEmployee;
 import com.accolite.furlough.repository.MSEmployeeRepository;
 import com.accolite.furlough.service.MSEmployeePopulatorService;
+import com.accolite.furlough.utils.Constants;
 
 @RestController
 public class MSEmployeeController {
-    final String location = "C:\\Users\\Accolite\\Downloads\\hrdata.xls";
+    final String location = Constants.HRDATA_FIL_LOCATION;
 
     @Autowired
     private MSEmployeeRepository msEmployeeRepository;
