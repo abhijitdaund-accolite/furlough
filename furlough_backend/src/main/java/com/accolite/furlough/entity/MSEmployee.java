@@ -29,6 +29,16 @@ public class MSEmployee {
     @Column(name = "email")
     private String email;
 
+    private boolean active;
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(final boolean active) {
+        this.active = active;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -62,13 +72,14 @@ public class MSEmployee {
     }
 
     public MSEmployee(final String mSID, final String accoliteEmployee, final String email, final String officeLocation,
-            final String resourceName) {
+            final String resourceName, final boolean active) {
         super();
         this.mSID = mSID;
         this.resourceName = resourceName;
         this.officeLocation = officeLocation;
         this.accoliteEmployee = accoliteEmployee;
         this.email = email;
+        this.active = active;
     }
 
     public String getAccoliteEmployee() {
