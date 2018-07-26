@@ -9,11 +9,13 @@ import java.sql.Statement;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
+import org.junit.platform.commons.logging.LoggerFactory;
+import org.slf4j.Logger;
 
 public class RequestIDGenerator
         implements
         IdentifierGenerator {
-
+	//private final static Logger logger = LoggerFactory.getLogger(RequestIDGenerator.class);
     @Override
     public Serializable generate(final SharedSessionContractImplementor session, final Object object)
             throws HibernateException {
@@ -31,7 +33,8 @@ public class RequestIDGenerator
                 return generatedID;
             }
         } catch (final SQLException e) {
-            e.printStackTrace();
+      //  	logger.error("Failed to generate request with error message : "+e.getMessage());
+        	e.printStackTrace();
         }
         return null;
     }
