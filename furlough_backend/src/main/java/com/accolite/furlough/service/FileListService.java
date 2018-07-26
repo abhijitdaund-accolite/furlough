@@ -20,7 +20,7 @@ public class FileListService {
     public List<FileDetailsList> getlistOfFileDetails() {
         final File[] listOfFiles = new File(Constants.ROOT_PATH + Constants.UPLOAD_DIR).listFiles();
         for (final File file : listOfFiles) {
-            final FileDetailsList fdl = new FileDetailsList(file.getName(), new Date(file.lastModified() * 1000));
+            final FileDetailsList fdl = new FileDetailsList(file.getName(), new Date(file.lastModified()));
             fileDetails.add(fdl);
         }
         return fileDetails;
