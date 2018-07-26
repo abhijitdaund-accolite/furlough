@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,8 +27,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import com.accolite.furlough.dto.FileDetailsList;
+import com.accolite.furlough.service.FileListService;
 import com.accolite.furlough.service.FileStorageService;
 import com.accolite.furlough.utils.Constants;
 
@@ -40,6 +39,9 @@ public class FileUploadController {
 
     @Autowired
     FileStorageService filestorageService;
+
+    @Autowired
+    FileListService fileListService;
 
     List<String> files = new ArrayList<String>();
     private final static Logger logger = LoggerFactory.getLogger(FileUploadController.class);
@@ -81,15 +83,16 @@ public class FileUploadController {
         }
     }
 
-    @GetMapping("/getallfiles")
-    public ResponseEntity<List<String>> getListFiles(final Model model) {
-        final List<String> fileNames = files
-                .stream().map(fileName -> MvcUriComponentsBuilder
-                        .fromMethodName(FileUploadController.class, "getFile", fileName).build().toString())
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok().body(fileNames);
-    }
+    // @GetMapping("/getallfiles")
+    // public ResponseEntity<List<String>> getListFiles(final Model model) {
+    // final List<String> fileNames = files
+    // .stream().map(fileName -> MvcUriComponentsBuilder
+    // .fromMethodName(FileUploadController.class, "getFile",
+    // fileName).build().toString())
+    // .collect(Collectors.toList());
+    //
+    // return ResponseEntity.ok().body(fileNames);
+    // }
 
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
@@ -99,4 +102,11 @@ public class FileUploadController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(file);
     }
+
+    @GetMapping("/files")
+    @ResponseBody
+    public List<FileDetailsList> getFiles() {
+        return fileListService.getlistOfFileDetails();
+    }
+
 }
