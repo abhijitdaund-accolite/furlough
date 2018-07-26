@@ -43,7 +43,7 @@ public class MSEmployeePopulatorService {
 
                 final MSEmployee msEmployee = new MSEmployee(formatter.formatCellValue(row.getCell(0)),
                         formatter.formatCellValue(row.getCell(1)), formatter.formatCellValue(row.getCell(3)),
-                        formatter.formatCellValue(row.getCell(4)), formatter.formatCellValue(row.getCell(5)));
+                        formatter.formatCellValue(row.getCell(4)), formatter.formatCellValue(row.getCell(5)), true);
                 msEmployeeRepository.save(msEmployee);
             }
             myWorkBook.close();

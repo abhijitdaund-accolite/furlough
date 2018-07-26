@@ -5,8 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -55,16 +53,16 @@ public class MSEmployeeController {
         return msEmployeeRepository.save(msEmployee);
     }
 
-    @DeleteMapping("/ms_employees/{mSID}")
-    public ResponseEntity<?> deleteMSEmployee(@PathVariable final String mSID) {
-
-        if (msEmployeeRepository.existsById(mSID)) {
-            final MSEmployee employee = msEmployeeRepository.findById(mSID).get();
-            msEmployeeRepository.delete(employee);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/ms_employees/{mSID}")
+    // public ResponseEntity<?> deleteMSEmployee(@PathVariable final String mSID) {
+    //
+    // if (msEmployeeRepository.existsById(mSID)) {
+    // final MSEmployee employee = msEmployeeRepository.findById(mSID).get();
+    // msEmployeeRepository.delete(employee);
+    // return ResponseEntity.ok().build();
+    // }
+    // return ResponseEntity.noContent().build();
+    // }
 
     @PutMapping("/ms_employees/{mSID}")
     public MSEmployee updateMSEmployee(@PathVariable final String mSID,
@@ -76,6 +74,7 @@ public class MSEmployeeController {
             employee.setEmail(msEmployeeRequest.getEmail());
             employee.setOfficeLocation(msEmployeeRequest.getOfficeLocation());
             employee.setResourceName(msEmployeeRequest.getResourceName());
+            employee.setActive(msEmployeeRequest.isActive());
             return msEmployeeRepository.save(employee);
         }
         return null;
