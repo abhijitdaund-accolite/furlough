@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.accolite.furlough.dto.AuthenticateResponse;
 import com.accolite.furlough.entity.Admin;
 import com.accolite.furlough.repository.AdminRolesRepository;
 
@@ -20,17 +19,17 @@ public class AdminController {
 
     @PostMapping("/login")
     @ResponseBody
-    public AuthenticateResponse authenticate(@Valid @RequestBody final Admin user) {
+    public boolean authenticate(@Valid @RequestBody final Admin user) {
 
         if (adminRolesRepository.existsById(user.getEmail())) {
             final Admin admin = adminRolesRepository.findById(user.getEmail()).get();
             if (admin.getPassword().equals(user.getPassword())) {
-                return new AuthenticateResponse(admin, true);
+                return true;
             } else {
-                return new AuthenticateResponse(admin, false);
+                return false;
             }
         } else {
-            return new AuthenticateResponse(null, false);
+            return false;
         }
 
     }
