@@ -43,12 +43,12 @@ public class FileUploadController {
     @Autowired
     FileListService fileListService;
 
-    List<String> files = new ArrayList<String>();
     private final static Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 
     @PostMapping("/post")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") final MultipartFile file) {
         String message = "";
+        final List<String> files = new ArrayList<String>();
         try {
             files.add(file.getOriginalFilename());
             final String fullName = file.getOriginalFilename();
