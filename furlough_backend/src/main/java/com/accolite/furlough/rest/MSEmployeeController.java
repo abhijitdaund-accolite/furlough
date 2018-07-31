@@ -68,14 +68,17 @@ public class MSEmployeeController {
     public MSEmployee updateMSEmployee(@PathVariable final String mSID,
             @Valid @RequestBody final MSEmployee msEmployeeRequest) {
         if (msEmployeeRepository.existsById(mSID)) {
+
             final MSEmployee employee = msEmployeeRepository.findById(mSID).get();
-            employee.setmSID(msEmployeeRequest.getmSID());
-            employee.setAccoliteEmployee(msEmployeeRequest.getAccoliteEmployee());
-            employee.setEmail(msEmployeeRequest.getEmail());
-            employee.setOfficeLocation(msEmployeeRequest.getOfficeLocation());
-            employee.setResourceName(msEmployeeRequest.getResourceName());
-            employee.setActive(msEmployeeRequest.isActive());
-            return msEmployeeRepository.save(employee);
+            msEmployeeRepository.delete(employee);
+            final MSEmployee modifiedEmployee = new MSEmployee();
+            modifiedEmployee.setmSID(msEmployeeRequest.getmSID());
+            modifiedEmployee.setAccoliteEmployee(msEmployeeRequest.getAccoliteEmployee());
+            modifiedEmployee.setEmail(msEmployeeRequest.getEmail());
+            modifiedEmployee.setOfficeLocation(msEmployeeRequest.getOfficeLocation());
+            modifiedEmployee.setResourceName(msEmployeeRequest.getResourceName());
+            modifiedEmployee.setActive(msEmployeeRequest.isActive());
+            return msEmployeeRepository.save(modifiedEmployee);
         }
         return null;
     }
