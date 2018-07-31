@@ -14,10 +14,10 @@ import com.accolite.furlough.utils.Constants;
 @Service
 public class FileListService {
 
-    List<FileDetailsList> fileDetails = new ArrayList<>();
     SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
     public List<FileDetailsList> getlistOfFileDetails() {
+        final List<FileDetailsList> fileDetails = new ArrayList<>();
         final File[] listOfFiles = new File(Constants.ROOT_PATH + Constants.UPLOAD_DIR).listFiles();
         for (final File file : listOfFiles) {
             final FileDetailsList fdl = new FileDetailsList(file.getName(), new Date(file.lastModified()));
