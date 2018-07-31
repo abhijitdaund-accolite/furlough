@@ -29,6 +29,17 @@ public class MSEmployee {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "phoneNumber")
+    private String phoneNumber;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(final String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     private boolean active;
 
     public boolean isActive() {
@@ -72,7 +83,7 @@ public class MSEmployee {
     }
 
     public MSEmployee(final String mSID, final String accoliteEmployee, final String email, final String officeLocation,
-            final String resourceName, final boolean active) {
+            final String resourceName, final boolean active, final String phoneNumber) {
         super();
         this.mSID = mSID;
         this.resourceName = resourceName;
@@ -80,6 +91,7 @@ public class MSEmployee {
         this.accoliteEmployee = accoliteEmployee;
         this.email = email;
         this.active = active;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getAccoliteEmployee() {
