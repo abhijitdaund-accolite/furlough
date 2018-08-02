@@ -3,6 +3,8 @@ package com.accolite.furlough.service;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +25,12 @@ public class FileListService {
             final FileDetailsList fdl = new FileDetailsList(file.getName(), new Date(file.lastModified()));
             fileDetails.add(fdl);
         }
+        Collections.sort(fileDetails, new Comparator<FileDetailsList>() {
+            public int compare(final FileDetailsList m1, final FileDetailsList m2) {
+                return m1.getLastModified().compareTo(m2.getLastModified());
+            }
+        });
+        Collections.reverse(fileDetails);
         return fileDetails;
     }
 
