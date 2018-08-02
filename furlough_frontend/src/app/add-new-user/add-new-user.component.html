@@ -1,0 +1,27 @@
+<div class="user-details">
+<mat-card class="user-details-card">
+  <mat-card-content>
+    <mat-card-title>ADD USER</mat-card-title>
+    <mat-card-content>
+      <mat-form-field>
+        <input matInput placeholder="MSID" [(ngModel)]="userDetails.MSID">
+      </mat-form-field><br>
+      <mat-form-field>
+        <input matInput placeholder="ACCOLITE ID" [(ngModel)]="userDetails.ACCOLITE_EMPLOYEE">
+      </mat-form-field><br>
+      <mat-form-field>
+        <input matInput placeholder="NAME" [(ngModel)]="userDetails.NAME">
+      </mat-form-field><br>
+      <mat-form-field>
+        <input matInput placeholder="EMAIL" [(ngModel)]="userDetails.EMAIL">
+      </mat-form-field><br>
+      <mat-form-field>
+        <input matInput placeholder="CONTACT" [(ngModel)]="userDetails.CONTACT">
+      </mat-form-field><br>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="createNewUser()">ADD</button>
+    </mat-card-actions>
+  </mat-card-content>
+</mat-card>
+</div>

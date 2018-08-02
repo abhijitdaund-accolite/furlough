@@ -1,8 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
-.loginBack {
-    background: #092756;
-}
+/*@import '~@angular/material/prebuilt-themes/.css';*/
 
-* {
-    font-family: 'Exo', sans-serif;
+body{
+  margin: 0;
+  font-family:Roboto, sans-serif;
+}
+mat-toolbar{
+  justify-content: space-between;
 }

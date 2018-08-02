@@ -1,11 +1,11 @@
-<div class="body"></div>
+
         <div class="grad"></div>
-        <img src="Logo.png" width="30%" height="30%" align="top">
+        <img [src]="logoImagePath" width="25%" height="25%" align="top">
 		<div class="header">
             
             <br/>
             
-			<div>Fur<span>lough</span></div> <br/>
+			<div>Fur<span>lough</span></div> <br/><br/>
             <div><span>Manage</span>ment</div>
         </div>
 		<br>
@@ -17,11 +17,9 @@
                             <div class="login-form">
                                 <div class="sign-in-htm">
                                     <div class="group">
-                                        <label for="user" class="label">Username</label>
-                                        <input class="input" type="text" placeholder="Username" required [(ngModel)]="userLogin.username">
+                                        <input class="input" type="text" placeholder="Username" required [(ngModel)]="userLogin.email">
                                     </div>
                                     <div class="group">
-                                        <label for="pass" class="label">Password</label>
                                         <input class="input" type="password" placeholder="Password" required [(ngModel)]="userLogin.password">
                                     </div>
                     
@@ -30,7 +28,7 @@
                                     </div>
                                     
                                     <div *ngIf="!errorMessage" class="alert alert-danger">
-                                        <div class="foot-lnk">
+                                        <div style="color: aliceblue">
                                           Invalid username or passsword!
                                         </div>
                                     </div>

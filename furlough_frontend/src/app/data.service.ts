@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable} from 'rxjs';
-import { HttpClient} from '@angular/common/http';
-import { Constants } from './constants';
+import {HttpClient, HttpEvent, HttpParams, HttpRequest} from '@angular/common/http';
+import {Constants} from './constants';
+import {Observable} from 'rxjs';
 import { Router } from '@angular/router';
-
-
 
 @Injectable({
   providedIn: 'root'
@@ -12,18 +10,15 @@ import { Router } from '@angular/router';
 export class DataService {
   private currentUser: string;
   private serverUri: string;
-  
-  constructor(private http: HttpClient,private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) { }
   getUserDetails() {
-    return this.http.get(this.serverUri);
+    return this.http.get(Constants.employeesUrl());
   }
-
-  public getData(startDate, endDate) {
+  getData(startDate, endDate) {
     startDate = this.reformatDate(startDate);
     endDate = this.reformatDate(endDate);
-    return this.http.get(Constants.baseUrl + '/requests?from=' + startDate + '+&to=' + endDate );
+    return this.http.get(Constants.reportsUrl(startDate, endDate));
   }
-
   reformatDate(dateObj): string {
     const dYear = dateObj.getFullYear();
     let dMonth = dateObj.getMonth() + 1;
@@ -36,7 +31,33 @@ export class DataService {
   }
   logout() {
     localStorage.setItem('key','0');
-    this.router.navigate(['/loginPage']);
+    this.router.navigate(['/login']);
   }
-
+  getFilesList() {
+    return this.http.get(Constants.filesUrl());
+  }
+  addNewUser(employeeDetails) {
+    console.log(employeeDetails);
+    return this.http.post(Constants.saveNewUser(), employeeDetails);
+  }
+  editUser(msid, employeeDetails) {
+    console.log(msid);
+    console.log(employeeDetails);
+    return this.http.put(Constants.editUser(msid), employeeDetails);
+  }
+  deactivateUser(msid, employeeDetails) {
+    console.log(msid);
+    console.log(employeeDetails);
+    return this.http.put(Constants.deactivateUser(msid), employeeDetails);
+  }
+  pushFileToStorage(file: File): Observable<HttpEvent<{}>> {
+    const formdata: FormData = new FormData();
+    const url = Constants.fileUploadUrl();
+    formdata.append('file', file);
+    const request = new HttpRequest('POST', url , formdata, {
+      reportProgress: true,
+      responseType: 'text'
+    });
+    return this.http.request(request);
+  }
 }

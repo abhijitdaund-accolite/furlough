@@ -11,15 +11,14 @@ body{
 	font-size: 12px;
 }
 
-.body{
-	background-image: url("Logo.png") no-repeat fixed;
+/* .body{
 	left: 20%;
 	-webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
 	-webkit-filter: blur(5px);
 	z-index: 0;
-}
+} */
 
 *,:after,:before{box-sizing:border-box}
 .clearfix:after,.clearfix:before{content:'';display:table}
@@ -31,12 +30,13 @@ a{color:inherit;text-decoration:none}
 	top: -20px;
 	left: -20px;
 	right: -40px;
-	bottom: -40px;
+	bottom: -70px;
 	width: auto;
 	height: auto;
 	background: linear-gradient(to top left,white,rgb(75, 209, 243));
 	z-index: 1;
 	opacity: 0.7;
+	overflow: hidden;
 }
 
 .header{
@@ -48,14 +48,14 @@ a{color:inherit;text-decoration:none}
 
 .header div{
 	float: left;
-	color: rgb(94, 121, 211);
+	color: rgba(5, 3, 119, 0.986);
 	font-family: 'Exo', sans-serif;
 	font-size: 35px;
 	font-weight: 600;
 }
 
 .header div span{
-	color: #5379fa !important;
+	color:  rgba(5, 3, 119, 0.514) !important;
 }
 
 .login{
@@ -74,6 +74,7 @@ a{color:inherit;text-decoration:none}
 	margin:auto;
 	max-width:625px;
 	position:relative;
+	height: 95vh;
 }
 
 .login-html{

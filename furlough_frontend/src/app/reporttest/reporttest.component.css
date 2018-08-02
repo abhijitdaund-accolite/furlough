@@ -1,0 +1,126 @@
+.navigator-right-left{
+  position: fixed;
+  right: 2rem;
+  bottom:2rem;
+}
+.navigator-right-left>button{
+  margin:1rem;
+}
+.command-view-container{
+  margin:1rem;
+}
+.back-button{
+  position: fixed;
+  left: 2rem;
+  bottom: 3rem;
+}
+
+.footer{
+  position: fixed;
+  bottom:0px;
+  height:40px;
+  font-size: 0.8rem;
+}
+
+.status-date{
+  float:left;
+}
+
+.status-text{
+  float:right;
+}
+
+.red-font{
+  background-color:#ff7777;
+  color: white;
+  padding:2px;
+  align-items: center;
+  justify-content: center;
+  font-size:1.3rem;
+}
+
+.green-font {
+  background-color: #2ECC40;
+  color:white;
+  padding:2px;
+  align-items: center;
+  justify-content: center;
+  font-size:1.3rem;
+}
+
+.month-name-cell {
+  padding:2px;
+  align-items: center;
+  justify-content: start;
+  min-width: 150px;
+}
+.red-font-border{
+  border: 1px solid #ff0011;
+  justify-content: center;
+  align-items: center;
+}
+
+.green-font-border{
+  border: 1px solid #2ECC40;
+  justify-content: center;
+  align-items: center;
+}
+
+.planned{
+  color:#ff0011;
+  font-size:1.3rem;
+}
+
+
+.some-overlapped{
+  border: 1px solid #4CAF50;
+  width:1rem;
+  height:1rem;
+  justify-content: center;
+  align-items: center;
+  padding:.4rem;
+}
+
+.no-overlapped{
+  color:#2ECC40;
+  text-decoration: underline;
+}
+
+.circled{
+  border: 1px solid #4CAF50;
+  border-radius: 50% 50%;
+  width:1rem;
+  height:1rem;
+  justify-content: center;
+  align-items: center;
+  padding:.4rem;
+}
+
+.triangle{
+  width:1rem;
+  height:1rem;
+  justify-content: center;
+  align-items: center;
+  padding:.4rem;
+}
+
+
+.header-row{
+  align-items:center;
+  justify-content: center;
+}
+.small {
+  font-size: 1rem;
+}
+
+.legend{
+  position: absolute;
+  left:0rem;
+  top:50vh;
+  height:130px;
+  width:250px;
+}
+
+.report-container{
+  margin-bottom: 50px;
+}

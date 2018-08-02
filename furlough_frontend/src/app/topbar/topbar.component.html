@@ -1,0 +1,17 @@
+<mat-toolbar color="primary">
+    <span routerLink='../welcome'><span><img src="../../assets/accoLogo.png" style="height: 30px;"></span> Furlough Management | ACCOLITE</span>
+    <span>
+      <button mat-button>
+          <span routerLink="../employees" routerLinkActive="router-link-active">&nbsp;&nbsp;EMPLOYEE DETAILS</span>
+      </button>
+      <button mat-button>
+        <span routerLink="../uploads" routerLinkActive="router-link-active">&nbsp;&nbsp;UPLOAD DOCUMENT</span>
+      </button>
+      <button mat-button>
+        <span routerLink="../reports" routerLinkActive="router-link-active">&nbsp;&nbsp;&nbsp;FURLOUGH REPORTS</span>
+      </button>
+      <span style="padding-left: 50px">
+        <button mat-button (click)="logout()" >Logout&nbsp;&nbsp;<i class="fa fa-power-off"></i></button>
+      </span>
+    </span>
+  </mat-toolbar>

@@ -1,0 +1,111 @@
+<app-topbar></app-topbar>
+<mat-grid-list cols="10" rowHeight="100px" class="command-view-container">
+    <mat-grid-tile [colspan]="3">
+      <mat-select [(value)]="inputParameters.TYPE" placeholder="INPUT TYPE">
+        <mat-option value={{0}}>YEARLY</mat-option>
+        <mat-option value={{1}}>QUATERLY</mat-option>
+        <mat-option value={{2}}>MONTHLY</mat-option>
+      </mat-select>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="3">
+      <mat-select [(value)]="inputParameters.YEAR" placeholder="YEAR">
+        <mat-option *ngFor="let year of yearList" value={{year}} >{{ year }}</mat-option>
+      </mat-select>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="3">
+      <mat-select [(value)]="inputParameters.MONTH" placeholder="MONTH">
+        <mat-option *ngFor="let month of monthHeaders" value={{monthHeadersMap[month]}} >{{ month }}</mat-option>
+      </mat-select>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1">
+      <button mat-raised-button color="primary" (click)="refreshDetails()">FETCH</button>
+    </mat-grid-tile>
+  </mat-grid-list>
+  <div class="report-container">
+  <div *ngIf="!dataSource.monthView">
+    <mat-table class="mat-elevation-z1" matSort (matSortChange) = "dataSource.sortData($event)" [dataSource]="dataSource">
+
+      <ng-container *ngFor="let month of dataSource.dataHeaders.slice(0,1)" matColumnDef={{month}}>
+        <mat-header-cell *matHeaderCellDef mat-sort-header="MSID">
+          {{month}}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let user">{{ user[month] }}</mat-cell>
+      </ng-container>
+  
+      <ng-container *ngFor="let month of dataSource.dataHeaders.slice(1,2)" matColumnDef={{month}}>
+        <mat-header-cell *matHeaderCellDef mat-sort-header="NAME">
+          {{month}}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let user">{{ user[month] }}</mat-cell>
+      </ng-container>
+  
+      <ng-container *ngFor="let month of dataSource.dataHeaders.slice(2,dataSource.dataHeaders.length - 1)" matColumnDef={{month}}>
+        <mat-header-cell *matHeaderCellDef (click)="handleMonthView(month)">
+          {{month}}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let user">
+          <span [ngClass]="{'planned':user[month].split(' ')[0]>0, 'square':user[month].split(' ')[0]==0 && user[month].split(' ')[3]!=0}">{{ user[month].split(' ')[0]>0 || user[month].split(' ')[3]>0?user[month].split(' ')[0]:'' }}</span>&nbsp;&nbsp;&nbsp;
+          <span [ngClass]="{
+            'no-overlapped':user[month].split(' ')[3]==0,
+            'some-overlapped':user[month].split(' ')[3] <user[month].split(' ')[0] && user[month].split(' ')[3]!=0,
+            'circled':user[month].split(' ')[0]==user[month].split(' ')[3] && user[month].split(' ')[0]!=0,
+            'small':user[month].split(' ')[3]==0 && user[month].split(' ')[0]!=0
+            }">{{ user[month].split(' ')[3]>0 || user[month].split(' ')[0]>0 ?user[month].split(' ')[3]:'' }}</span>
+        </mat-cell>
+      </ng-container>
+  
+      <ng-container *ngFor="let month of dataSource.dataHeaders.slice(dataSource.dataHeaders.length - 1, dataSource.dataHeaders.length)" matColumnDef={{month}}>
+        <mat-header-cell *matHeaderCellDef mat-sort-header="TOTAL" >
+          {{month}}
+        </mat-header-cell>
+        <mat-cell [ngClass]="{'red-font': user[month] > 0, 'green-font':user[month] === 0}" *matCellDef="let user"><span>{{ user[month] }}</span></mat-cell>
+      </ng-container>
+  
+      <mat-header-row *matHeaderRowDef="dataSource.dataHeaders"></mat-header-row>
+      <mat-row *matRowDef="let row;columns:dataSource.dataHeaders"></mat-row>
+    </mat-table>
+  </div>
+  <div *ngIf="dataSource.monthView">
+    <button class="back-button" mat-fab (click)="handleBack()"><span class="fa fa-reply"></span></button>
+    <mat-table class="mat-elevation-z1 month-table" [dataSource]="dataSource" matSort (matSortChange) = "dataSource.sortDataMonth($event)">
+  
+      <ng-container *ngFor="let days of dataSource.monthDataHeaders.slice(0,1)" matColumnDef={{days}}>
+        <mat-header-cell *matHeaderCellDef mat-sort-header="MSID">{{ days }}</mat-header-cell>
+        <mat-cell *matCellDef="let user">{{user[days]}}</mat-cell>
+      </ng-container>
+      <ng-container *ngFor="let days of dataSource.monthDataHeaders.slice(1,2)" matColumnDef={{days}}>
+        <mat-header-cell class='month-name-cell' *matHeaderCellDef mat-sort-header="NAME">{{ days }}</mat-header-cell>
+        <mat-cell  class='month-name-cell'*matCellDef="let user">{{user[days]}}</mat-cell>
+      </ng-container>
+      <ng-container *ngFor="let days of dataSource.monthDataHeaders.slice(2,dataSource.monthDataHeaders.length - 1)" matColumnDef={{days}}>
+        <mat-header-cell class="header-row" *matHeaderCellDef>{{ days }}</mat-header-cell>
+        <mat-cell *matCellDef="let user" [ngClass]="{'green-font-border':user[days]===2,'red-font-border':user[days]===1}">{{user[days] === 2?'O':(user[days]===1?'F':'.')}}</mat-cell>
+      </ng-container>
+      <ng-container *ngFor="let days of dataSource.monthDataHeaders.slice(dataSource.monthDataHeaders.length - 1, dataSource.monthDataHeaders.length)" matColumnDef={{days}}>
+        <mat-header-cell *matHeaderCellDef mat-sort-header="TOTAL">{{ days }}</mat-header-cell>
+        <mat-cell [ngClass]="{'red-font':user[days]>0,'green-font':user[days]===0}" *matCellDef="let user">{{user[days]}}</mat-cell>
+      </ng-container>
+  
+      <mat-header-row *matHeaderRowDef="dataSource.monthDataHeaders"></mat-header-row>
+      <mat-row *matRowDef="let row;columns: dataSource.monthDataHeaders"></mat-row>
+    </mat-table>
+  </div>
+</div>
+  <div class="navigator-right-left">
+    <button mat-fab (click)="handleLeft()"><span class="fa fa-chevron-left"></span></button>
+    <button mat-fab (click)="handleRight()"><span class="fa fa-chevron-right"></span></button>
+  </div>
+  
+  <mat-toolbar class="footer" color="primary">
+    <div class="status-date">
+      Month: {{monthHeaders[inputParameters.MONTH]}} |
+      Year: {{inputParameters.YEAR}} |
+      Quarter: {{ inputParameters.QUARTER_VIEW.QUARTER_NUMBER }}
+    </div>
+    <div class="status-text">{{ dataSource.noData? 'NO DATA FOUND': '' }}</div>
+    <div class="total-loss">
+      LOSS ({{sectionMap[inputParameters.TYPE]}}) : {{dataSource.totalLoss}} &nbsp;&nbsp;&nbsp;
+      LOSS (MONTHLY) : {{dataSource.totalMonthlyLoss}}
+    </div>
+  
+  </mat-toolbar>
