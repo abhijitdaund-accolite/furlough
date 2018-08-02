@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.accolite.furlough.entity.FurloughData;
 import com.accolite.furlough.entity.MSEmployee;
-import com.accolite.furlough.parserinput.SendJavaMail;
+import com.accolite.furlough.mail.SendJavaMail;
 import com.accolite.furlough.repository.MSEmployeeRepository;
 import com.accolite.furlough.utils.Constants;
 import com.accolite.furlough.utils.EmailUtil;

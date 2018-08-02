@@ -1,6 +1,7 @@
 package com.accolite.furlough.rest;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -20,7 +21,7 @@ import com.accolite.furlough.utils.Constants;
 
 @RestController
 public class MSEmployeeController {
-    final String location = Constants.HRDATA_FIL_LOCATION;
+    static final String LOCATION = Constants.HRDATA_FIL_LOCATION;
 
     @Autowired
     private MSEmployeeRepository msEmployeeRepository;
@@ -30,7 +31,7 @@ public class MSEmployeeController {
 
     @RequestMapping(value = "/ms/populate")
     public String populateMSEmployees() {
-        populator.populateMSEmployees(location);
+        populator.populateMSEmployees(LOCATION);
         return "Populated MS Employees successfully!";
     }
 
@@ -43,8 +44,12 @@ public class MSEmployeeController {
     @RequestMapping(value = "/ms_employees/{id}")
     @ResponseBody
     public MSEmployee getMSEmployee(@PathVariable("id") final String msid) {
-
-        return msEmployeeRepository.findById(msid).get();
+        final Optional<MSEmployee> msEmployeeOptional = msEmployeeRepository.findById(msid);
+        if (msEmployeeOptional.isPresent()) {
+            return msEmployeeOptional.get();
+        } else {
+            return null;
+        }
     }
 
     @PostMapping("/ms_employees")
@@ -53,23 +58,12 @@ public class MSEmployeeController {
         return msEmployeeRepository.save(msEmployee);
     }
 
-    // @DeleteMapping("/ms_employees/{mSID}")
-    // public ResponseEntity<?> deleteMSEmployee(@PathVariable final String mSID) {
-    //
-    // if (msEmployeeRepository.existsById(mSID)) {
-    // final MSEmployee employee = msEmployeeRepository.findById(mSID).get();
-    // msEmployeeRepository.delete(employee);
-    // return ResponseEntity.ok().build();
-    // }
-    // return ResponseEntity.noContent().build();
-    // }
-
     @PutMapping("/ms_employees/{mSID}")
     public MSEmployee updateMSEmployee(@PathVariable final String mSID,
             @Valid @RequestBody final MSEmployee msEmployeeRequest) {
-        if (msEmployeeRepository.existsById(mSID)) {
-
-            final MSEmployee employee = msEmployeeRepository.findById(mSID).get();
+        final Optional<MSEmployee> msEmployeeOptional = msEmployeeRepository.findById(mSID);
+        if (msEmployeeOptional.isPresent()) {
+            final MSEmployee employee = msEmployeeOptional.get();
             msEmployeeRepository.delete(employee);
             final MSEmployee modifiedEmployee = new MSEmployee();
             modifiedEmployee.setmSID(msEmployeeRequest.getmSID());

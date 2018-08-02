@@ -25,12 +25,7 @@ public class AdminController {
 
         final Optional<Admin> adminValue = adminRolesRepository.findById(user.getEmail());
         if (adminValue.isPresent()) {
-            final Admin admin = adminValue.get();
-            if (admin.getPassword().equals(user.getPassword())) {
-                return true;
-            } else {
-                return false;
-            }
+            return adminValue.get().getPassword().equals(user.getPassword());
         } else {
             return false;
         }

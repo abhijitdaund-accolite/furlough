@@ -8,10 +8,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.ws.rs.QueryParam;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +29,8 @@ import com.accolite.furlough.utils.FurloughRequestsIDTracker;
 
 @RestController
 public class FurloughRequestsController {
+
+    private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 
     @Autowired
     private FurloughRequestsRepository furloughRequestRepository;
@@ -53,20 +58,21 @@ public class FurloughRequestsController {
             eDate = parser.parse(to);
 
         } catch (final ParseException e) {
-            return null;
+            logger.error("Error while parsing : {}", e.getMessage());
+            return new ArrayList<>();
         }
 
         final List<FurloughRequests> totalFurloughsInRange = this.furloughRequestRepository
                 .findByFurloughID_furloughDateBetween(sDate, eDate);
-        final Set<String> distinctMSIDs = new HashSet();
-        final List<FurloughReport> listReports = new ArrayList();
+        final Set<String> distinctMSIDs = new HashSet<>();
+        final List<FurloughReport> listReports = new ArrayList<>();
 
         final Iterator<FurloughRequests> itr = totalFurloughsInRange.iterator();
-        final Map<String, ArrayList<DateAndOverlap>> datesMap = new HashMap();
+        final Map<String, ArrayList<DateAndOverlap>> datesMap = new HashMap<>();
 
         while (itr.hasNext()) {
             final FurloughRequests requests = itr.next();
-            System.out.println(requests);
+            logger.info("Requests : {}", requests);
 
             final FurloughRequestsIDTracker idTracker = requests.getFurloughID();
             distinctMSIDs.add(idTracker.getmSID());
@@ -84,15 +90,15 @@ public class FurloughRequestsController {
         while (itrMSIDs.hasNext()) {
 
             final String MSID = itrMSIDs.next();
-            if (msEmployeeRepository.existsById(MSID)) {
-                final MSEmployee emp = this.msEmployeeRepository.findById(MSID).get();
+            final Optional<MSEmployee> msEmployeeOptional = msEmployeeRepository.findById(MSID);
+            if (msEmployeeOptional.isPresent()) {
+                final MSEmployee emp = msEmployeeOptional.get();
                 final FurloughReport report = new FurloughReport(emp.getmSID(), datesMap.get(MSID),
                         emp.getResourceName()
 
                 );
 
                 listReports.add(report);
-
             }
         }
 
