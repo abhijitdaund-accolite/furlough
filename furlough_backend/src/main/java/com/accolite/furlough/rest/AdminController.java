@@ -1,5 +1,7 @@
 package com.accolite.furlough.rest;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,9 @@ public class AdminController {
     @ResponseBody
     public boolean authenticate(@Valid @RequestBody final Admin user) {
 
-        if (adminRolesRepository.existsById(user.getEmail())) {
-            final Admin admin = adminRolesRepository.findById(user.getEmail()).get();
+        final Optional<Admin> adminValue = adminRolesRepository.findById(user.getEmail());
+        if (adminValue.isPresent()) {
+            final Admin admin = adminValue.get();
             if (admin.getPassword().equals(user.getPassword())) {
                 return true;
             } else {

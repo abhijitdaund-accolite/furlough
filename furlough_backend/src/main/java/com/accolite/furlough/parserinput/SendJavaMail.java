@@ -1,6 +1,5 @@
 package com.accolite.furlough.parserinput;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -14,6 +13,8 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.accolite.furlough.utils.Constants;
+
 public class SendJavaMail {
 
     private final String fromEmail;
@@ -21,7 +22,7 @@ public class SendJavaMail {
     private final String mailContent;
     private final String mailSubject;
     private final String password;
-    private final static Logger logger = LoggerFactory.getLogger(SendJavaMail.class);
+    private static final Logger logger = LoggerFactory.getLogger(SendJavaMail.class);
 
     public SendJavaMail(final String password, final String fromEmail, final String toEmail, final String mailSubject,
             final String mailContent) {
@@ -32,12 +33,16 @@ public class SendJavaMail {
         this.mailSubject = mailSubject;
     }
 
-    public SendJavaMail(final String toEmail, final String mailContent) {
-        this.password = "Superstar!2";
+    public SendJavaMail(final String toEmail, final StringBuilder finalString) {
+        this.password = getPassword();
         this.fromEmail = "vignesh.b@accoliteindia.com";
         this.toEmail = toEmail;
-        this.mailContent = mailContent;
+        this.mailContent = String.valueOf(finalString);
         this.mailSubject = "Furlough Leaves Standard Subject Text";
+    }
+
+    private String getPassword() {
+        return Constants.PASSWORD;
     }
 
     public void sendJavaMail() {
@@ -65,17 +70,11 @@ public class SendJavaMail {
             message.setText(mailContent);
 
             Transport.send(message);
-            logger.info("Email sent successfully to : " + toEmail);
-            // System.out.println("Sent the email Successfully!");
+            logger.info("Email sent successfully to : {}", toEmail);
 
         } catch (final MessagingException e) {
-            logger.error("Failed to send with error message : " + e.getMessage());
-            // throw new RuntimeException(e);
+            logger.error("Failed to send with error message : {}", e.getMessage());
         }
     }
 
-    public static void main(final String[] args) throws IOException {
-        final SendJavaMail m = new SendJavaMail("raunak.maheshwari@accoliteindia.com", "finalString");
-        m.sendJavaMail();
-    }
 }

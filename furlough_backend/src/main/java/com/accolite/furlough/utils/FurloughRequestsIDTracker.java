@@ -74,7 +74,7 @@ public class FurloughRequestsIDTracker
 
     @Override
     public int hashCode() {
-        return 0; // TODO code to calculate HashCode PRIORITY
+        return 0;
     }
 
 }
