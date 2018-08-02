@@ -21,16 +21,16 @@ import com.accolite.furlough.repository.MSEmployeeRepository;
 public class MSEmployeePopulatorService {
 
     final DataFormatter formatter = new DataFormatter();
-    private final static Logger log = LoggerFactory.getLogger(FileStorageService.class);
+    private static final Logger log = LoggerFactory.getLogger(FileStorageService.class);
 
     @Autowired
     private MSEmployeeRepository msEmployeeRepository;
 
     public void populateMSEmployees(final String location) {
-        try {
-            final File inputExcel = new File(location);
-            final FileInputStream fis = new FileInputStream(inputExcel);
-            final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis);
+        final File inputExcel = new File(location);
+        try (final FileInputStream fis = new FileInputStream(inputExcel);
+                final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis)) {
+
             final HSSFSheet furloughSheet = myWorkBook.getSheetAt(0);
             final Iterator<Row> rowIterator = furloughSheet.iterator();
 
@@ -38,19 +38,18 @@ public class MSEmployeePopulatorService {
                 final Row row = rowIterator.next();
                 if (row.getCell(0) == null) // To break the moment we are done with rows having data
                     break;
-                if (formatter.formatCellValue(row.getCell(0)).equals("MSID")) // Skipping the first header row
-                    continue;
+                if (row.getCell(0) != null && !(formatter.formatCellValue(row.getCell(0)).equals("MSID"))) {
+                    final MSEmployee msEmployee = new MSEmployee(formatter.formatCellValue(row.getCell(0)),
+                            formatter.formatCellValue(row.getCell(1)), formatter.formatCellValue(row.getCell(3)),
+                            formatter.formatCellValue(row.getCell(4)), formatter.formatCellValue(row.getCell(5)), true,
+                            "");
+                    msEmployeeRepository.save(msEmployee);
+                }
 
-                final MSEmployee msEmployee = new MSEmployee(formatter.formatCellValue(row.getCell(0)),
-                        formatter.formatCellValue(row.getCell(1)), formatter.formatCellValue(row.getCell(3)),
-                        formatter.formatCellValue(row.getCell(4)), formatter.formatCellValue(row.getCell(5)), true, "");
-                msEmployeeRepository.save(msEmployee);
             }
-            myWorkBook.close();
-            fis.close();
 
         } catch (final IOException e) {
-            log.error("Error in reading file from system with error message " + e.getMessage());
+            log.error("Error in reading file from system with error message {}", e.getMessage());
         }
     }
 

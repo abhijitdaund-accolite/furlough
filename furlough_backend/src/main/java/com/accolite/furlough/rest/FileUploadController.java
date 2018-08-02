@@ -43,12 +43,12 @@ public class FileUploadController {
     @Autowired
     FileListService fileListService;
 
-    private final static Logger logger = LoggerFactory.getLogger(FileUploadController.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 
     @PostMapping("/post")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") final MultipartFile file) {
         String message = "";
-        final List<String> files = new ArrayList<String>();
+        final List<String> files = new ArrayList<>();
         try {
             files.add(file.getOriginalFilename());
             final String fullName = file.getOriginalFilename();
@@ -70,7 +70,7 @@ public class FileUploadController {
                 return ResponseEntity.status(HttpStatus.OK).body(message);
             } else {
                 message = "wrong file type " + file.getOriginalFilename() + "!";
-                logger.error(file.getOriginalFilename() + " is not an xls file");
+                logger.error("{} is not an xls file", file.getOriginalFilename());
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
             }
 
@@ -78,21 +78,10 @@ public class FileUploadController {
 
         catch (final Exception e) {
             message = "FAIL to upload " + file.getOriginalFilename() + "!";
-            logger.error("Failed to upload " + file.getOriginalFilename() + " error :" + e.getMessage());
+            logger.error("Failed to upload {}, error {}", file.getOriginalFilename(), e.getMessage());
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
         }
     }
-
-    // @GetMapping("/getallfiles")
-    // public ResponseEntity<List<String>> getListFiles(final Model model) {
-    // final List<String> fileNames = files
-    // .stream().map(fileName -> MvcUriComponentsBuilder
-    // .fromMethodName(FileUploadController.class, "getFile",
-    // fileName).build().toString())
-    // .collect(Collectors.toList());
-    //
-    // return ResponseEntity.ok().body(fileNames);
-    // }
 
     @GetMapping("/files/{filename:.+}")
     @ResponseBody

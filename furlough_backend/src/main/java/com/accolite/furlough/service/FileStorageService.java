@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.accolite.furlough.repository.MSEmployeeRepository;
 import com.accolite.furlough.utils.Constants;
 
 @Service
@@ -25,11 +24,8 @@ public class FileStorageService {
     final DataFormatter formatter = new DataFormatter();
 
     @Autowired
-    private MSEmployeeRepository msEmployeeRepository;
-
-    @Autowired
     private ParserService parserService;
-    private final static Logger log = LoggerFactory.getLogger(FileStorageService.class);
+    private static final Logger log = LoggerFactory.getLogger(FileStorageService.class);
     private final Path rootLocation = Paths.get(Constants.ROOT_PATH + Constants.UPLOAD_DIR);
 
     public void store(final MultipartFile file) {
@@ -38,7 +34,7 @@ public class FileStorageService {
             final String finalString = rootLocation.toString() + Constants.URL_SEP + file.getOriginalFilename();
             parserService.mapExcelToHashmap(finalString);
         } catch (final Exception e) {
-            log.error("Failed to store the file. Error: " + e.getMessage());
+            log.error("Failed to store the file. Error: {}", e.getMessage());
         }
     }
 
@@ -52,7 +48,7 @@ public class FileStorageService {
                 log.error("Fail to load the file");
             }
         } catch (final MalformedURLException e) {
-            log.error("Failed to load the file Error: " + e.getMessage());
+            log.error("Failed to load the file Error: {}", e.getMessage());
         }
         return null;
     }
@@ -65,7 +61,7 @@ public class FileStorageService {
         try {
             Files.createDirectory(rootLocation);
         } catch (final IOException e) {
-            log.error("Could not initialize storage Error: " + e.getMessage());
+            log.error("Could not initialize storage Error: {}", e.getMessage());
         }
     }
 

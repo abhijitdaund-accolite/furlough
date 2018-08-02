@@ -29,7 +29,7 @@ import com.accolite.furlough.utils.Constants;
 public class ParserService {
 
     final DataFormatter formatter = new DataFormatter();
-    private final static Logger log = LoggerFactory.getLogger(FileStorageService.class);
+    private static final Logger log = LoggerFactory.getLogger(FileStorageService.class);
 
     @Autowired
     private DbUpdaterService dbUpdater;
@@ -37,75 +37,75 @@ public class ParserService {
     @Autowired
     private MailService mailer;
 
-    public Map<String, FurloughData> mapExcelToHashmap(final String location) throws InterruptedException {
+    public Map<String, FurloughData> mapExcelToHashmap(final String location) {
 
-        try {
-            final List<FurloughLog> listFurloughLog = new ArrayList<FurloughLog>();
-            final Map<String, FurloughData> map = new HashMap<String, FurloughData>();
-            final File inputExcel = new File(location);
-            final FileInputStream fis = new FileInputStream(inputExcel);
-            final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis);
+        final File inputExcel = new File(location);
+        try (final FileInputStream fis = new FileInputStream(inputExcel);
+                final HSSFWorkbook myWorkBook = new HSSFWorkbook(fis);) {
+            final List<FurloughLog> listFurloughLog = new ArrayList<>();
+            final Map<String, FurloughData> map = new HashMap<>();
+
             final HSSFSheet furloughSheet = myWorkBook.getSheetAt(0);
             final Iterator<Row> rowIterator = furloughSheet.iterator();
             while (rowIterator.hasNext()) {
                 final Row row = rowIterator.next();
                 if (row.getCell(0) == null) // To break the moment we are done with rows having data
                     break;
-                if (formatter.formatCellValue(row.getCell(0)).equals("MSID")) // Skipping the first header row
-                    continue;
-                final FurloughLog furloughLog = new FurloughLog();
-                final Date furloughDate = new SimpleDateFormat(Constants.DATE_FORMAT)
-                        .parse(formatter.formatCellValue(row.getCell(3)));
 
-                furloughLog.setmSID(formatter.formatCellValue((row.getCell(0))));
-                furloughLog.setFurloughStatus(formatter.formatCellValue(row.getCell(4)));
-                furloughLog.setFurloughDate(furloughDate);
-                furloughLog.setLogTime(new Date());
+                if (row.getCell(0) != null && !(formatter.formatCellValue(row.getCell(0)).equals("MSID"))) {
 
-                listFurloughLog.add(furloughLog);
+                    final FurloughLog furloughLog = new FurloughLog();
+                    final Date furloughDate = new SimpleDateFormat(Constants.DATE_FORMAT)
+                            .parse(formatter.formatCellValue(row.getCell(3)));
 
-                // If the employee has already been parsed in a previous row, we just update/add
-                // FurloughDate and Status
-                if (map.containsKey(formatter.formatCellValue(row.getCell(0)))) {
-                    final FurloughData tempFurlough = map.get(formatter.formatCellValue(row.getCell(0)));
-                    final Map<Date, String> dateMap = tempFurlough.getFurloughDates();
-                    dateMap.put(furloughDate, formatter.formatCellValue(row.getCell(4)));
-                    tempFurlough.setFurloughDates(dateMap);
+                    furloughLog.setmSID(formatter.formatCellValue((row.getCell(0))));
+                    furloughLog.setFurloughStatus(formatter.formatCellValue(row.getCell(4)));
+                    furloughLog.setFurloughDate(furloughDate);
+                    furloughLog.setLogTime(new Date());
 
-                    map.put(tempFurlough.getMSID(), tempFurlough);
+                    listFurloughLog.add(furloughLog);
+
+                    // If the employee has already been parsed in a previous row, we just update/add
+                    // FurloughDate and Status
+                    if (map.containsKey(formatter.formatCellValue(row.getCell(0)))) {
+                        final FurloughData tempFurlough = map.get(formatter.formatCellValue(row.getCell(0)));
+                        final Map<Date, String> dateMap = tempFurlough.getFurloughDates();
+                        dateMap.put(furloughDate, formatter.formatCellValue(row.getCell(4)));
+                        tempFurlough.setFurloughDates(dateMap);
+
+                        map.put(tempFurlough.getMSID(), tempFurlough);
+                    }
+
+                    // Employee found in the excel file for the first time. So adding it to Java Map
+                    else {
+                        final FurloughData furlough = new FurloughData();
+
+                        furlough.setMSID(formatter.formatCellValue(row.getCell(0)));
+                        furlough.setResourceName(formatter.formatCellValue(row.getCell(1)));
+                        furlough.setVendorName(formatter.formatCellValue(row.getCell(2)));
+
+                        final Map<Date, String> dateMap = new HashMap<>();
+                        dateMap.put(furloughDate, formatter.formatCellValue(row.getCell(4)));
+                        furlough.setFurloughDates(dateMap);
+
+                        furlough.setDivision(formatter.formatCellValue(row.getCell(5)));
+                        furlough.setLocation(formatter.formatCellValue(row.getCell(6)));
+                        furlough.setComments(formatter.formatCellValue(row.getCell(7)));
+
+                        map.put(furlough.getMSID(), furlough);
+                    }
+
                 }
-
-                // Employee found in the excel file for the first time. So adding it to Java Map
-                else {
-                    final FurloughData furlough = new FurloughData();
-
-                    furlough.setMSID(formatter.formatCellValue(row.getCell(0)));
-                    furlough.setResourceName(formatter.formatCellValue(row.getCell(1)));
-                    furlough.setVendorName(formatter.formatCellValue(row.getCell(2)));
-
-                    final Map<Date, String> dateMap = new HashMap<Date, String>();
-                    dateMap.put(furloughDate, formatter.formatCellValue(row.getCell(4)));
-                    furlough.setFurloughDates(dateMap);
-
-                    furlough.setDivision(formatter.formatCellValue(row.getCell(5)));
-                    furlough.setLocation(formatter.formatCellValue(row.getCell(6)));
-                    furlough.setComments(formatter.formatCellValue(row.getCell(7)));
-
-                    map.put(furlough.getMSID(), furlough);
-                }
-
             }
-            myWorkBook.close();
-            fis.close();
 
             dbUpdater.updateDB(listFurloughLog, map);
             mailer.sendMails(map);
             return map;
 
         } catch (final IOException e) {
-            log.error("Error in reading file from system with error message " + e.getMessage());
+            log.error("Error in reading file from system with error message {}", e.getMessage());
         } catch (final ParseException e) {
-            log.error("Error in parsing date with error message " + e.getMessage());
+            log.error("Error in parsing date with error message {}", e.getMessage());
         }
         return null;
     }
