@@ -11,5 +11,5 @@ import com.accolite.furlough.entity.FurloughLog;
 public interface FurloughLogRepository
         extends
         JpaRepository<FurloughLog, String> {
-    List<FurloughLog> findByMSID(String MSID);
+    List<FurloughLog> findByMSID(String mSID);
 }

@@ -1,4 +1,4 @@
-package com.accolite.furlough.parserinput;
+package com.accolite.furlough.mail;
 
 import java.util.Properties;
 

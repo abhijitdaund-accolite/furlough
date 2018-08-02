@@ -1,4 +1,4 @@
-package com.accolite.furlough.parserinput;
+package com.accolite.furlough.mail;
 
 import java.io.IOException;
 
@@ -20,7 +20,7 @@ public class SendMail {
     private final String toEmail;
     private final String mailContent;
     private final String mailSubject;
-    private final static Logger logger = LoggerFactory.getLogger(SendMail.class);
+    private static final Logger logger = LoggerFactory.getLogger(SendMail.class);
 
     public SendMail(final String toEmail, final String mailContent) {
         this.fromEmail = "raunak.maheshwari@accoliteindia.com";
@@ -51,18 +51,12 @@ public class SendMail {
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
             final Response response = sg.api(request);
-            System.out.println(response.getStatusCode());
-            System.out.println(response.getBody());
-            System.out.println(response.getHeaders());
+            logger.info("Response status : {}", response.getStatusCode());
+            logger.info("Response Body : {}", response.getBody());
+            logger.info("Response Headers : {}", response.getHeaders());
         } catch (final IOException ex) {
-            logger.error("Failed with error message : " + ex.getMessage());
-            // throw ex;
+            logger.error("Failed with error message : {}", ex.getMessage());
         }
     }
 
-    // public static void main(final String[] args) throws IOException {
-    // final SendMail m = new SendMail("raunak.maheshwari@accoliteindia.com",
-    // "finalString");
-    // m.sendMail();
-    // }
 }

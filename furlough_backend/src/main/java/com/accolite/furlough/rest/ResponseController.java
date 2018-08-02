@@ -18,8 +18,8 @@ import com.accolite.furlough.utils.EmailUtil;
 @RestController
 public class ResponseController {
     @Autowired
-    private ResourceConfirmedService ResourceConfirmer;
-    private final static Logger logger = LoggerFactory.getLogger(ResponseController.class);
+    private ResourceConfirmedService resourceConfirmer;
+    private static final Logger logger = LoggerFactory.getLogger(ResponseController.class);
 
     // http:10.4.12.142:8080/furlough/verify?msid=GHDF23&dates=jlalhlseef20349023
     @RequestMapping("/verify")
@@ -33,13 +33,12 @@ public class ResponseController {
         final String decodedMSID = EmailUtil.base64Decode(msid);
         final Map<String, List<String>> map = EmailUtil.getMailResponseMap(decodedMSID, decodedDates);
         try {
-            ResourceConfirmer.confirmer(map);
+            resourceConfirmer.confirmer(map);
             return "Thank you for confirming your furlough dates.";
         } catch (final Exception e) {
-            final String message = "Unable to confirm the furlough dates. Error : " + e.getMessage();
-            logger.error(message);
-            e.printStackTrace();
-            return message;
+
+            logger.error("Unable to confirm the furlough dates. Error : {}", e.getMessage());
+            return "Unable to confirm the furlough dates. Error" + e.getMessage();
         }
     }
 
