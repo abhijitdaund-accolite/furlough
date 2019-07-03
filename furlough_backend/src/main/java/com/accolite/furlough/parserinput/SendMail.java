@@ -2,6 +2,9 @@ package com.accolite.furlough.parserinput;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sendgrid.Content;
 import com.sendgrid.Email;
 import com.sendgrid.Mail;
@@ -17,6 +20,14 @@ public class SendMail {
     private final String toEmail;
     private final String mailContent;
     private final String mailSubject;
+    private final static Logger logger = LoggerFactory.getLogger(SendMail.class);
+
+    public SendMail(final String toEmail, final String mailContent) {
+        this.fromEmail = "raunak.maheshwari@accoliteindia.com";
+        this.toEmail = toEmail;
+        this.mailContent = mailContent;
+        this.mailSubject = "Furlough Leaves Standard Subject Text";
+    }
 
     public SendMail(final String fromEmail, final String toEmail, final String mailSubject, final String mailContent) {
         this.fromEmail = fromEmail;
@@ -44,7 +55,14 @@ public class SendMail {
             System.out.println(response.getBody());
             System.out.println(response.getHeaders());
         } catch (final IOException ex) {
-            throw ex;
+            logger.error("Failed with error message : " + ex.getMessage());
+            // throw ex;
         }
     }
+
+    // public static void main(final String[] args) throws IOException {
+    // final SendMail m = new SendMail("raunak.maheshwari@accoliteindia.com",
+    // "finalString");
+    // m.sendMail();
+    // }
 }
